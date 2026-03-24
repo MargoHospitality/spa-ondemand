@@ -8,7 +8,8 @@ node_modules/
 .env.*.local
 
 # Build
-dist/
+apps/*/dist/
+# packages/shared/dist/ is committed for Railway compatibility
 build/
 .next/
 .vercel/
