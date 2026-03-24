@@ -1,0 +1,15 @@
+{
+  "name": "margo-spa-booking",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev:api": "pnpm --filter @margo/api dev",
+    "dev:web": "pnpm --filter @margo/web dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

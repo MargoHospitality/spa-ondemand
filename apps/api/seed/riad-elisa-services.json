@@ -1,0 +1,477 @@
+{
+  "property": "riad-elisa-spa",
+  "currency": "MAD",
+  "services": [
+
+    // ─── HAMMAM ───────────────────────────────────────────────
+
+    {
+      "category": "hammam",
+      "name_fr": "Hammam royal marocain",
+      "name_en": "Royal Moroccan Hammam",
+      "description_fr": "Une expérience complète de hammam traditionnel marocain, comprenant un gommage corporel au savon à l'eucalyptus noir, un savonnage complet du corps et un enveloppement corporel à l'argile purifiante, suivi d'une hydratation corporelle.",
+      "description_en": "A complete traditional Moroccan hammam experience, includes body scrub with black eucalyptus soap, full-body soaping, and a purifying clay body wrap, followed by body hydration.",
+      "duration_minutes": 40,
+      "price_single": 450,
+      "price_couple": null,
+      "display_order": 1,
+      "active": true
+    },
+    {
+      "category": "hammam",
+      "name_fr": "Hammam Royal",
+      "name_en": "Royal Hammam",
+      "description_fr": "Hammam traditionnel marocain avec savon noir à l'eucalyptus, savonnage complet du corps et enveloppement corporel à l'argile, suivi d'une hydratation corporelle.",
+      "description_en": "Moroccan traditional hammam with black eucalyptus soap, and full body soaping and a clay body wrap, followed by body hydration.",
+      "duration_minutes": 30,
+      "price_single": 400,
+      "price_couple": null,
+      "display_order": 2,
+      "active": true
+    },
+    {
+      "category": "hammam",
+      "name_fr": "Soins du corps Elisa",
+      "name_en": "Elisa Body Care",
+      "description_fr": "Gommage corporel à la crème exfoliante, grains d'argan et mandarine aromatique, avec lait oriental hydratant à la fleur d'oranger suivi d'une hydratation corporelle.",
+      "description_en": "Body scrub with exfoliating cream, argan grains and aromatic mandarin, with hydrating oriental milk with orange blossom followed by body hydration.",
+      "duration_minutes": 30,
+      "price_single": 400,
+      "price_couple": null,
+      "display_order": 3,
+      "active": true
+    },
+    {
+      "category": "hammam",
+      "name_fr": "Rituel du Hammam du Maghreb",
+      "name_en": "Hammam Ritual of the Maghreb",
+      "description_fr": "Hammam traditionnel avec savon noir et gommage corporel, suivi d'une hydratation de la peau pour un fini soyeux.",
+      "description_en": "Traditional hammam with black soap and body scrub, followed by skin hydration for a silky-smooth finish.",
+      "duration_minutes": 30,
+      "price_single": 350,
+      "price_couple": null,
+      "display_order": 4,
+      "active": true
+    },
+
+    // ─── PACK HAMMAM / MASSAGE ────────────────────────────────
+
+    {
+      "category": "pack_hammam_massage",
+      "name_fr": "Pack Duo Pause Douceur (couple)",
+      "name_en": "Duo Sweet Break Pack (couple)",
+      "description_fr": "Une escapade détente à deux : hammam avec gommage au savon noir, suivi d'un massage de 50 minutes. Comprend un masque visage éclat, une pose de vernis pour Madame et un massage des pieds pour Monsieur.",
+      "description_en": "A relaxing escape for two: hammam with black soap scrub, followed by a 50-minute massage. Includes a radiance face mask, nail polish application for the lady, and a foot massage for the gentleman.",
+      "duration_minutes": 100,
+      "price_single": null,
+      "price_couple": 2400,
+      "display_order": 5,
+      "active": true
+    },
+    {
+      "category": "pack_hammam_massage",
+      "name_fr": "Pack Signature",
+      "name_en": "Signature Package",
+      "description_fr": "Un rituel de hammam marocain : gommage au savon noir à l'eucalyptus, savonnage complet du corps, masque corporel purifiant à l'argile, massage de 50 minutes, incluant un soin du visage ou un massage relaxant des pieds, au choix.",
+      "description_en": "Moroccan ritual Hammam: eucalyptus black soap scrub, full-body soaping, purifying clay body mask, a 50-minute massage, including a facial treatment or a relaxing foot massage, as preferred.",
+      "duration_minutes": 120,
+      "price_single": 1400,
+      "price_couple": null,
+      "display_order": 6,
+      "active": true
+    },
+    {
+      "category": "pack_hammam_massage",
+      "name_fr": "Pack Marocain",
+      "name_en": "Moroccan Package",
+      "description_fr": "Hammam marocain traditionnel avec gommage au savon noir à l'eucalyptus, savonnage complet du corps et masque corporel à l'argile, suivi d'un massage de 50 minutes et d'un masque visage éclat.",
+      "description_en": "Traditional Moroccan hammam with eucalyptus black soap scrub, full-body soaping, and a clay body mask, followed by a 50-minute massage and a radiance face mask.",
+      "duration_minutes": 90,
+      "price_single": 1000,
+      "price_couple": null,
+      "display_order": 7,
+      "active": true
+    },
+    {
+      "category": "pack_hammam_massage",
+      "name_fr": "Pack Elisa",
+      "name_en": "Elisa Package",
+      "description_fr": "La formule traditionnelle marocaine au gommage au savon noir à l'eucalyptus, avec rinçage des cheveux, suivi d'un massage de 50 minutes et d'un masque visage éclat.",
+      "description_en": "The traditional Moroccan formula with eucalyptus black soap scrub, with hair rinsing, followed by a 50-minute massage and a radiance face mask.",
+      "duration_minutes": 80,
+      "price_single": 900,
+      "price_couple": null,
+      "display_order": 8,
+      "active": true
+    },
+    {
+      "category": "pack_hammam_massage",
+      "name_fr": "Pack Nuage Oriental",
+      "name_en": "Oriental Cloud Package",
+      "description_fr": "Profitez d'un rituel hammam marocain avec gommage au savon noir, avec rinçage des cheveux, suivi d'un massage relaxant de 45 minutes.",
+      "description_en": "Enjoy a Moroccan hammam ritual with black soap scrub, with hair rinsing, followed by a 45-minute relaxing massage.",
+      "duration_minutes": 70,
+      "price_single": 750,
+      "price_couple": null,
+      "display_order": 9,
+      "active": true
+    },
+
+    // ─── MASSAGE ──────────────────────────────────────────────
+
+    {
+      "category": "massage",
+      "name_fr": "Massage Relaxant",
+      "name_en": "Relaxing Massage",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 50,
+      "price_single": 600,
+      "price_couple": 1100,
+      "display_order": 10,
+      "active": true
+    },
+    {
+      "category": "massage",
+      "name_fr": "Massage Marocain",
+      "name_en": "Moroccan Massage",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 50,
+      "price_single": 600,
+      "price_couple": 1100,
+      "display_order": 11,
+      "active": true
+    },
+    {
+      "category": "massage",
+      "name_fr": "Massage Tonique",
+      "name_en": "Tonic Massage",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 50,
+      "price_single": 620,
+      "price_couple": 1200,
+      "display_order": 12,
+      "active": true
+    },
+    {
+      "category": "massage",
+      "name_fr": "Massage aux pierres chaudes",
+      "name_en": "Hot Stone Massage",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 50,
+      "price_single": 650,
+      "price_couple": 1200,
+      "display_order": 13,
+      "active": true
+    },
+    {
+      "category": "massage",
+      "name_fr": "Massage pour femmes enceintes",
+      "name_en": "Massage for Pregnant Women",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 50,
+      "price_single": 600,
+      "price_couple": null,
+      "display_order": 14,
+      "active": true
+    },
+    {
+      "category": "massage",
+      "name_fr": "Massage de votre choix",
+      "name_en": "Massage of Your Choice",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 80,
+      "price_single": 900,
+      "price_couple": null,
+      "display_order": 15,
+      "active": true
+    },
+    {
+      "category": "massage",
+      "name_fr": "Massage à quatre mains",
+      "name_en": "Four-Hand Massage",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 50,
+      "price_single": 1100,
+      "price_couple": null,
+      "display_order": 16,
+      "active": true
+    },
+    {
+      "category": "massage",
+      "name_fr": "Massage visage et cuir chevelu",
+      "name_en": "Face and Scalp Massage",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 30,
+      "price_single": 450,
+      "price_couple": null,
+      "display_order": 17,
+      "active": true
+    },
+    {
+      "category": "massage",
+      "name_fr": "Massage du dos et des épaules",
+      "name_en": "Back and Shoulder Massage",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 30,
+      "price_single": 450,
+      "price_couple": null,
+      "display_order": 18,
+      "active": true
+    },
+    {
+      "category": "massage",
+      "name_fr": "Réflexologie",
+      "name_en": "Reflexology",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 30,
+      "price_single": 450,
+      "price_couple": null,
+      "display_order": 19,
+      "active": true
+    },
+
+    // ─── SOINS DU VISAGE ──────────────────────────────────────
+
+    {
+      "category": "soins_visage",
+      "name_fr": "Soins du visage",
+      "name_en": "Facial Care",
+      "description_fr": "Soin du visage oriental purifiant aux argiles et au rhassoul. Soin du visage aux graines de figue de barbarie et à l'huile de néroli.",
+      "description_en": "Purifying oriental facial treatment with clay and rhassoul. Divine facial treatment with prickly pear seeds and neroli oil.",
+      "duration_minutes": 40,
+      "price_single": 650,
+      "price_couple": null,
+      "display_order": 20,
+      "active": true
+    },
+
+    // ─── MISE EN BEAUTÉ ───────────────────────────────────────
+
+    {
+      "category": "mise_en_beaute",
+      "name_fr": "Manucure + pose de vernis normal",
+      "name_en": "Manicure + Normal Nail Polish",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 40,
+      "price_single": 300,
+      "price_couple": null,
+      "display_order": 21,
+      "active": true
+    },
+    {
+      "category": "mise_en_beaute",
+      "name_fr": "Manucure + vernis permanent",
+      "name_en": "Manicure + Permanent Varnish",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 45,
+      "price_single": 400,
+      "price_couple": null,
+      "display_order": 22,
+      "active": true
+    },
+    {
+      "category": "mise_en_beaute",
+      "name_fr": "Pédicure + pose de vernis normal",
+      "name_en": "Pedicure + Normal Nail Polish",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 40,
+      "price_single": 300,
+      "price_couple": null,
+      "display_order": 23,
+      "active": true
+    },
+    {
+      "category": "mise_en_beaute",
+      "name_fr": "Pédicure + vernis permanent",
+      "name_en": "Pedicure + Permanent Varnish",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": 40,
+      "price_single": 450,
+      "price_couple": null,
+      "display_order": 24,
+      "active": true
+    },
+    {
+      "category": "mise_en_beaute",
+      "name_fr": "Application normale du vernis",
+      "name_en": "Normal Varnish Application",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 80,
+      "price_couple": null,
+      "display_order": 25,
+      "active": true
+    },
+    {
+      "category": "mise_en_beaute",
+      "name_fr": "Vernis semi-permanent",
+      "name_en": "Semi-Permanent Varnish",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 150,
+      "price_couple": null,
+      "display_order": 26,
+      "active": true
+    },
+    {
+      "category": "mise_en_beaute",
+      "name_fr": "Dépose",
+      "name_en": "Removal",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 50,
+      "price_couple": null,
+      "display_order": 27,
+      "active": true
+    },
+
+    // ─── ÉPILATION ────────────────────────────────────────────
+
+    {
+      "category": "epilation",
+      "name_fr": "Sourcils",
+      "name_en": "Eyebrows",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 100,
+      "price_couple": null,
+      "display_order": 28,
+      "active": true
+    },
+    {
+      "category": "epilation",
+      "name_fr": "Lèvres",
+      "name_en": "Lips",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 100,
+      "price_couple": null,
+      "display_order": 29,
+      "active": true
+    },
+    {
+      "category": "epilation",
+      "name_fr": "Aisselles",
+      "name_en": "Armpits",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 120,
+      "price_couple": null,
+      "display_order": 30,
+      "active": true
+    },
+    {
+      "category": "epilation",
+      "name_fr": "Demi-bras",
+      "name_en": "Half Arm",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 180,
+      "price_couple": null,
+      "display_order": 31,
+      "active": true
+    },
+    {
+      "category": "epilation",
+      "name_fr": "Bras",
+      "name_en": "Arms",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 230,
+      "price_couple": null,
+      "display_order": 32,
+      "active": true
+    },
+    {
+      "category": "epilation",
+      "name_fr": "Bikini complète",
+      "name_en": "Full Bikini",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 250,
+      "price_couple": null,
+      "display_order": 33,
+      "active": true
+    },
+    {
+      "category": "epilation",
+      "name_fr": "Bikini brésilien",
+      "name_en": "Brazilian Bikini",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 130,
+      "price_couple": null,
+      "display_order": 34,
+      "active": true
+    },
+    {
+      "category": "epilation",
+      "name_fr": "Demi-jambes",
+      "name_en": "Half Legs",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 230,
+      "price_couple": null,
+      "display_order": 35,
+      "active": true
+    },
+    {
+      "category": "epilation",
+      "name_fr": "Jambes complètes",
+      "name_en": "Full Legs",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 250,
+      "price_couple": null,
+      "display_order": 36,
+      "active": true
+    },
+    {
+      "category": "epilation",
+      "name_fr": "Dos",
+      "name_en": "Back",
+      "description_fr": null,
+      "description_en": null,
+      "duration_minutes": null,
+      "price_single": 280,
+      "price_couple": null,
+      "display_order": 37,
+      "active": true
+    }
+  ],
+
+  "categories": [
+    { "key": "hammam",              "label_fr": "Hammam",           "label_en": "Hammam" },
+    { "key": "pack_hammam_massage", "label_fr": "Pack Hammam / Massage", "label_en": "Hammam / Massage Package" },
+    { "key": "massage",             "label_fr": "Massage",          "label_en": "Massage" },
+    { "key": "soins_visage",        "label_fr": "Soins du visage",  "label_en": "Facial Care" },
+    { "key": "mise_en_beaute",      "label_fr": "Mise en beauté",   "label_en": "Beauty Treatment" },
+    { "key": "epilation",           "label_fr": "Épilation",        "label_en": "Hair Removal" }
+  ]
+}

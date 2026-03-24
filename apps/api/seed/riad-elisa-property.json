@@ -1,0 +1,20 @@
+{
+  "name": "Riad Elisa & Spa",
+  "slug": "riad-elisa-spa",
+  "logo_url": "/assets/logo-riad-elisa.png",
+  "primary_color": "#cd9d54",
+  "secondary_color": "#faf9f0",
+  "tertiary_color": "#707070",
+  "opening_time": "09:00",
+  "closing_time": "20:00",
+  "manager_response_delay_minutes": 60,
+  "manager_auto_fail_delay_minutes": 90,
+  "client_confirmation_delay_24h": 24,
+  "client_confirmation_delay_48h": 12,
+  "client_confirmation_delay_long": 2,
+  "locale_default": "fr",
+  "locales_available": ["fr", "en"],
+  "currency": "MAD",
+  "microtransaction_amount": 1000,
+  "active": true
+}

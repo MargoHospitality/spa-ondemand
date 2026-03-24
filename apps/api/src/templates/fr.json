@@ -1,0 +1,77 @@
+{
+  "booking_requested": {
+    "whatsapp": "🧖 Nouvelle demande spa — {{property_name}}\n\nClient : {{client_name}}\nSoin : {{service_name}} ({{duration}} min — {{price}})\nCréneau souhaité : {{requested_slot}}\nSéjourne à : {{client_origin}}\nSource : {{client_source}}\n\n👉 Traiter la demande : {{action_url}}\n⏱ Vous avez {{response_delay}} min pour répondre.",
+    "email_subject": "Nouvelle demande spa — {{client_name}} — {{service_name}}",
+    "email_html": "<h2>Nouvelle demande de soin</h2><p><strong>Client :</strong> {{client_name}}<br><strong>Soin :</strong> {{service_name}} ({{duration}} min — {{price}})<br><strong>Créneau souhaité :</strong> {{requested_slot}}<br><strong>Séjourne à :</strong> {{client_origin}}<br><strong>Source :</strong> {{client_source}}</p><p><a href=\"{{action_url}}\" style=\"display:inline-block;padding:12px 24px;background:#000;color:#fff;text-decoration:none;border-radius:6px;\">Traiter la demande</a></p><p>⏱ Vous avez {{response_delay}} min pour répondre.</p>"
+  },
+  "manager_reminder": {
+    "whatsapp": "⏱ Rappel — Demande en attente\n\n{{client_name}} attend votre réponse pour {{service_name}} le {{requested_slot}}.\n\n👉 Traiter la demande : {{action_url}}",
+    "email_subject": "Rappel : demande en attente — {{client_name}}",
+    "email_html": "<h2>Rappel : demande en attente</h2><p><strong>{{client_name}}</strong> attend votre réponse pour <strong>{{service_name}}</strong> le <strong>{{requested_slot}}</strong>.</p><p><a href=\"{{action_url}}\" style=\"display:inline-block;padding:12px 24px;background:#000;color:#fff;text-decoration:none;border-radius:6px;\">Traiter la demande</a></p>"
+  },
+  "manager_confirmed": {
+    "whatsapp": "✅ Votre demande est acceptée — {{property_name}}\n\nSoin : {{service_name}}\nCréneau confirmé : {{confirmed_slot}}\n\n👉 Confirmer et réserver : {{action_url}}\n⏱ Vous avez jusqu'au {{deadline}} pour confirmer.",
+    "email_subject": "Votre soin est disponible — Confirmez votre réservation",
+    "email_html": "<h2>Votre demande a été acceptée !</h2><p><strong>Soin :</strong> {{service_name}} ({{duration}} min — {{price}})<br><strong>Créneau confirmé :</strong> {{confirmed_slot}}</p><p>Pour confirmer votre réservation, une microtransaction de {{microtransaction_amount}} sera effectuée sur votre carte bancaire.</p><p><a href=\"{{action_url}}\" style=\"display:inline-block;padding:12px 24px;background:#000;color:#fff;text-decoration:none;border-radius:6px;\">Confirmer mon soin</a></p><p>⏱ Vous avez jusqu'au {{deadline}} pour confirmer.</p>"
+  },
+  "manager_rescheduled": {
+    "whatsapp": "🔄 Contre-proposition — {{property_name}}\n\nVotre créneau n'est pas disponible, mais nous vous proposons :\nSoin : {{service_name}}\nNouveau créneau : {{confirmed_slot}}\n\n👉 Répondre : {{action_url}}",
+    "email_subject": "Proposition de nouveau créneau — {{service_name}}",
+    "email_html": "<h2>Nouvelle proposition de créneau</h2><p>Le créneau demandé n'est malheureusement pas disponible. Nous vous proposons :</p><p><strong>Soin :</strong> {{service_name}} ({{duration}} min — {{price}})<br><strong>Nouveau créneau :</strong> {{confirmed_slot}}</p><p><a href=\"{{action_url}}\" style=\"display:inline-block;padding:12px 24px;background:#000;color:#fff;text-decoration:none;border-radius:6px;\">Répondre à la proposition</a></p>"
+  },
+  "manager_declined": {
+    "whatsapp": "❌ Demande non disponible — {{property_name}}\n\nNous sommes désolés, votre demande pour {{service_name}} le {{requested_slot}} n'a pas pu être honorée.\n\nN'hésitez pas à soumettre une nouvelle demande.",
+    "email_subject": "Votre demande de soin n'est pas disponible",
+    "email_html": "<h2>Demande non disponible</h2><p>Nous sommes désolés, votre demande pour <strong>{{service_name}}</strong> le <strong>{{requested_slot}}</strong> n'a pas pu être honorée.</p><p>N'hésitez pas à <a href=\"{{booking_url}}\">soumettre une nouvelle demande</a>.</p>"
+  },
+  "client_confirmed": {
+    "whatsapp": "🎉 Réservation confirmée — {{property_name}}\n\nSoin : {{service_name}}\nDate : {{confirmed_slot}}\n\n👉 Gérer mon soin : {{manage_url}}",
+    "email_subject": "Réservation confirmée — {{service_name}} le {{confirmed_slot}}",
+    "email_html": "<h2>Votre réservation est confirmée !</h2><p><strong>Soin :</strong> {{service_name}} ({{duration}} min)<br><strong>Date :</strong> {{confirmed_slot}}<br><strong>Lieu :</strong> {{property_name}}</p><p>Le paiement se fait sur place. Une microtransaction de {{microtransaction_amount}} a été effectuée pour valider votre carte.</p><p><a href=\"{{manage_url}}\" style=\"display:inline-block;padding:12px 24px;background:#000;color:#fff;text-decoration:none;border-radius:6px;\">Gérer mon soin</a></p><p>À bientôt !</p>"
+  },
+  "expired_manager": {
+    "whatsapp": "😔 Demande expirée — {{property_name}}\n\nNous n'avons pas pu traiter votre demande pour {{service_name}} le {{requested_slot}} dans les temps.\n\nVeuillez soumettre une nouvelle demande.",
+    "email_subject": "Votre demande de soin a expiré",
+    "email_html": "<h2>Demande expirée</h2><p>Nous n'avons malheureusement pas pu traiter votre demande pour <strong>{{service_name}}</strong> le <strong>{{requested_slot}}</strong> dans les délais impartis.</p><p>Nous vous invitons à <a href=\"{{booking_url}}\">soumettre une nouvelle demande</a>.</p>"
+  },
+  "expired_client": {
+    "whatsapp": "⏱ Réservation expirée — {{property_name}}\n\nLe délai de confirmation pour votre soin {{service_name}} le {{confirmed_slot}} est dépassé.\n\nVous pouvez soumettre une nouvelle demande.",
+    "email_subject": "Délai de confirmation dépassé — {{service_name}}",
+    "email_html": "<h2>Délai de confirmation dépassé</h2><p>Le délai pour confirmer votre réservation pour <strong>{{service_name}}</strong> le <strong>{{confirmed_slot}}</strong> est malheureusement dépassé.</p><p>Vous pouvez <a href=\"{{booking_url}}\">soumettre une nouvelle demande</a>.</p>"
+  },
+  "reminder_48h": {
+    "whatsapp": "📅 Rappel — Votre soin dans 2 jours\n\n{{service_name}} — {{confirmed_slot}}\n{{property_name}}\n\n👉 Gérer mon soin : {{manage_url}}",
+    "email_subject": "Rappel : votre soin dans 2 jours — {{service_name}}",
+    "email_html": "<h2>Votre soin approche !</h2><p>Pour rappel, vous avez un soin réservé :</p><p><strong>Soin :</strong> {{service_name}}<br><strong>Date :</strong> {{confirmed_slot}}<br><strong>Lieu :</strong> {{property_name}}</p><p><a href=\"{{manage_url}}\" style=\"display:inline-block;padding:12px 24px;background:#000;color:#fff;text-decoration:none;border-radius:6px;\">Gérer mon soin</a></p>"
+  },
+  "reminder_4h": {
+    "whatsapp": "⏰ Rappel — Votre soin dans quelques heures\n\n{{service_name}} — {{confirmed_slot}}\n{{property_name}}\n\nÀ très bientôt !",
+    "email_subject": "Rappel : votre soin aujourd'hui — {{service_name}}",
+    "email_html": "<h2>C'est bientôt l'heure de votre soin !</h2><p><strong>Soin :</strong> {{service_name}}<br><strong>Date :</strong> {{confirmed_slot}}<br><strong>Lieu :</strong> {{property_name}}</p><p>À très bientôt !</p>"
+  },
+  "cancelled_client": {
+    "whatsapp": "❎ Annulation confirmée — {{property_name}}\n\nVotre soin {{service_name}} du {{confirmed_slot}} a bien été annulé.\n{{refund_info}}",
+    "email_subject": "Annulation confirmée — {{service_name}}",
+    "email_html": "<h2>Annulation confirmée</h2><p>Votre réservation pour <strong>{{service_name}}</strong> le <strong>{{confirmed_slot}}</strong> a bien été annulée.</p><p>{{refund_info}}</p><p>N'hésitez pas à <a href=\"{{booking_url}}\">réserver à nouveau</a>.</p>"
+  },
+  "cancelled_manager": {
+    "whatsapp": "❎ Soin annulé — {{property_name}}\n\nVotre soin {{service_name}} du {{confirmed_slot}} a été annulé par le spa.\n\nNous nous excusons pour la gêne occasionnée.",
+    "email_subject": "Votre soin a été annulé — {{service_name}}",
+    "email_html": "<h2>Soin annulé</h2><p>Nous sommes désolés, votre soin <strong>{{service_name}}</strong> du <strong>{{confirmed_slot}}</strong> a été annulé par le spa.</p><p>Nous nous excusons pour la gêne occasionnée. N'hésitez pas à <a href=\"{{booking_url}}\">soumettre une nouvelle demande</a>.</p>"
+  },
+  "modification_requested": {
+    "whatsapp": "🔄 Demande de modification — {{property_name}}\n\n{{client_name}} souhaite modifier son soin :\nSoin : {{service_name}}\nNouveau créneau souhaité : {{requested_slot}}\n\n👉 Traiter : {{action_url}}",
+    "email_subject": "Demande de modification — {{client_name}} — {{service_name}}",
+    "email_html": "<h2>Demande de modification</h2><p><strong>{{client_name}}</strong> souhaite modifier son soin :</p><p><strong>Soin :</strong> {{service_name}}<br><strong>Nouveau créneau souhaité :</strong> {{requested_slot}}</p><p><a href=\"{{action_url}}\" style=\"display:inline-block;padding:12px 24px;background:#000;color:#fff;text-decoration:none;border-radius:6px;\">Traiter la demande</a></p>"
+  },
+  "modification_confirmed": {
+    "whatsapp": "✅ Modification acceptée — {{property_name}}\n\nVotre soin {{service_name}} est maintenant prévu le {{confirmed_slot}}.\n\n👉 Gérer mon soin : {{manage_url}}",
+    "email_subject": "Modification confirmée — {{service_name}}",
+    "email_html": "<h2>Modification confirmée</h2><p>Votre soin <strong>{{service_name}}</strong> est maintenant prévu le <strong>{{confirmed_slot}}</strong>.</p><p><a href=\"{{manage_url}}\" style=\"display:inline-block;padding:12px 24px;background:#000;color:#fff;text-decoration:none;border-radius:6px;\">Gérer mon soin</a></p>"
+  },
+  "reschedule_link": {
+    "whatsapp": "✅ Créneau accepté — {{property_name}}\n\nSoin : {{service_name}}\nCréneau : {{confirmed_slot}}\n\n👉 Confirmer et réserver : {{action_url}}\n⏱ Vous avez jusqu'au {{deadline}} pour confirmer.",
+    "email_subject": "Confirmez votre réservation — {{service_name}}",
+    "email_html": "<h2>Confirmez votre réservation</h2><p><strong>Soin :</strong> {{service_name}} ({{duration}} min — {{price}})<br><strong>Créneau :</strong> {{confirmed_slot}}</p><p><a href=\"{{action_url}}\" style=\"display:inline-block;padding:12px 24px;background:#000;color:#fff;text-decoration:none;border-radius:6px;\">Confirmer mon soin</a></p><p>⏱ Vous avez jusqu'au {{deadline}} pour confirmer.</p>"
+  }
+}
