@@ -1,3 +1,5 @@
+console.log('🚀 Starting Margo Spa Booking API...');
+
 import express from 'express';
 import cors from 'cors';
 import { config } from './config.js';

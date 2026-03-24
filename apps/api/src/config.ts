@@ -1,8 +1,12 @@
+console.log('📋 Loading config...');
 import 'dotenv/config';
 
 function required(key: string): string {
   const value = process.env[key];
-  if (!value) throw new Error(`Missing required env var: ${key}`);
+  if (!value) {
+    console.error(`❌ Missing required env var: ${key}`);
+    throw new Error(`Missing required env var: ${key}`);
+  }
   return value;
 }
 
