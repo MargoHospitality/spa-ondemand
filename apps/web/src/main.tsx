@@ -1,6 +1,6 @@
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LocaleContext, type Locale } from './lib/i18n';
 import { AuthGuard } from './components/AuthGuard';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -27,6 +27,9 @@ function App() {
     <LocaleContext.Provider value={{ locale, setLocale }}>
       <BrowserRouter>
         <Routes>
+          {/* Root redirect to Riad Elisa (POC) */}
+          <Route path="/" element={<Navigate to="/riad-elisa/request" replace />} />
+
           {/* Public client-facing pages */}
           <Route path="/:slug/request" element={<BookingRequestPage />} />
           <Route path="/confirm/:token" element={<ConfirmationPage />} />
