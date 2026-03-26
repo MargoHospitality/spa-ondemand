@@ -45,8 +45,11 @@ const defaults: TemplateMap = {
       whatsapp: `🧖 Nouvelle demande spa — {{property_name}}
 
 Client : {{client_name}}
-Soin : {{service_name}} ({{duration}} min — {{price}})
+Soin : {{service_name}}
+Durée : {{duration}} min
 Créneau souhaité : {{requested_slot}}
+Personnes : {{guest_count}}
+Total : {{total_price}}
 Séjourne à : {{client_origin}}
 Source : {{client_source}}
 
@@ -55,8 +58,11 @@ Source : {{client_source}}
       email_subject: `Nouvelle demande spa — {{client_name}}`,
       email_body: `<h2>Nouvelle demande de soin</h2>
 <p><strong>Client :</strong> {{client_name}}</p>
-<p><strong>Soin :</strong> {{service_name}} ({{duration}} min — {{price}})</p>
+<p><strong>Soin :</strong> {{service_name}}</p>
+<p><strong>Durée :</strong> {{duration}} min</p>
 <p><strong>Créneau souhaité :</strong> {{requested_slot}}</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 <p><strong>Séjourne à :</strong> {{client_origin}}</p>
 <p><strong>Source :</strong> {{client_source}}</p>
 <p><strong>Message :</strong> {{client_message}}</p>
@@ -68,8 +74,11 @@ Source : {{client_source}}
       whatsapp: `🧖 New spa request — {{property_name}}
 
 Client: {{client_name}}
-Treatment: {{service_name}} ({{duration}} min — {{price}})
+Treatment: {{service_name}}
+Duration: {{duration}} min
 Requested slot: {{requested_slot}}
+Guests: {{guest_count}}
+Total: {{total_price}}
 Staying at: {{client_origin}}
 Source: {{client_source}}
 
@@ -78,8 +87,11 @@ Source: {{client_source}}
       email_subject: `New spa request — {{client_name}}`,
       email_body: `<h2>New treatment request</h2>
 <p><strong>Client:</strong> {{client_name}}</p>
-<p><strong>Treatment:</strong> {{service_name}} ({{duration}} min — {{price}})</p>
+<p><strong>Treatment:</strong> {{service_name}}</p>
+<p><strong>Duration:</strong> {{duration}} min</p>
 <p><strong>Requested slot:</strong> {{requested_slot}}</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 <p><strong>Staying at:</strong> {{client_origin}}</p>
 <p><strong>Source:</strong> {{client_source}}</p>
 <p><strong>Message:</strong> {{client_message}}</p>
@@ -94,16 +106,22 @@ Source: {{client_source}}
       whatsapp: `⏰ Rappel — Demande spa en attente
 
 Client : {{client_name}}
-Soin : {{service_name}} ({{duration}} min)
+Soin : {{service_name}}
+Durée : {{duration}} min
 Créneau : {{requested_slot}}
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
 👉 Traiter maintenant : {{manager_link}}
 ⚠️ La demande expirera dans {{remaining_minutes}} min.`,
       email_subject: `Rappel : demande spa en attente — {{client_name}}`,
       email_body: `<h2>Rappel : demande en attente</h2>
 <p><strong>Client :</strong> {{client_name}}</p>
-<p><strong>Soin :</strong> {{service_name}} ({{duration}} min)</p>
+<p><strong>Soin :</strong> {{service_name}}</p>
+<p><strong>Durée :</strong> {{duration}} min</p>
 <p><strong>Créneau :</strong> {{requested_slot}}</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 <br>
 <a href="{{manager_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Traiter maintenant</a>
 <p style="color:#c00;margin-top:12px;">⚠️ La demande expirera dans {{remaining_minutes}} min.</p>`,
@@ -112,16 +130,22 @@ Créneau : {{requested_slot}}
       whatsapp: `⏰ Reminder — Pending spa request
 
 Client: {{client_name}}
-Treatment: {{service_name}} ({{duration}} min)
+Treatment: {{service_name}}
+Duration: {{duration}} min
 Slot: {{requested_slot}}
+Guests: {{guest_count}}
+Total: {{total_price}}
 
 👉 Handle now: {{manager_link}}
 ⚠️ Request expires in {{remaining_minutes}} min.`,
       email_subject: `Reminder: pending spa request — {{client_name}}`,
       email_body: `<h2>Reminder: pending request</h2>
 <p><strong>Client:</strong> {{client_name}}</p>
-<p><strong>Treatment:</strong> {{service_name}} ({{duration}} min)</p>
+<p><strong>Treatment:</strong> {{service_name}}</p>
+<p><strong>Duration:</strong> {{duration}} min</p>
 <p><strong>Slot:</strong> {{requested_slot}}</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 <br>
 <a href="{{manager_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Handle now</a>
 <p style="color:#c00;margin-top:12px;">⚠️ Request expires in {{remaining_minutes}} min.</p>`,
@@ -135,7 +159,8 @@ Slot: {{requested_slot}}
 Soin : {{service_name}}
 Date : {{confirmed_slot}}
 Durée : {{duration}} min
-Prix : {{price}}
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
 👉 Confirmer et valider ma carte : {{confirm_link}}
 ⏱ Vous avez jusqu'au {{deadline}} pour confirmer.`,
@@ -144,11 +169,12 @@ Prix : {{price}}
 <p><strong>Soin :</strong> {{service_name}}</p>
 <p><strong>Date :</strong> {{confirmed_slot}}</p>
 <p><strong>Durée :</strong> {{duration}} min</p>
-<p><strong>Prix :</strong> {{price}}</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 <br>
 <a href="{{confirm_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Confirmer mon soin</a>
 <p style="color:#888;margin-top:12px;">⏱ Vous avez jusqu'au {{deadline}} pour confirmer.</p>
-<p style="color:#888;">Une microtransaction de {{microtransaction_display}} sera débitée pour valider votre carte. Le paiement du soin se fait sur place.</p>`,
+<p style="color:#888;">Votre carte sera enregistrée de manière sécurisée. Aucun montant ne sera débité. Le paiement du soin se fait sur place.</p>`,
     },
     en: {
       whatsapp: `✅ Your treatment request has been accepted!
@@ -156,7 +182,8 @@ Prix : {{price}}
 Treatment: {{service_name}}
 Date: {{confirmed_slot}}
 Duration: {{duration}} min
-Price: {{price}}
+Guests: {{guest_count}}
+Total: {{total_price}}
 
 👉 Confirm and validate my card: {{confirm_link}}
 ⏱ You have until {{deadline}} to confirm.`,
@@ -165,11 +192,12 @@ Price: {{price}}
 <p><strong>Treatment:</strong> {{service_name}}</p>
 <p><strong>Date:</strong> {{confirmed_slot}}</p>
 <p><strong>Duration:</strong> {{duration}} min</p>
-<p><strong>Price:</strong> {{price}}</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 <br>
 <a href="{{confirm_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Confirm my treatment</a>
 <p style="color:#888;margin-top:12px;">⏱ You have until {{deadline}} to confirm.</p>
-<p style="color:#888;">A {{microtransaction_display}} micro-transaction will be charged to validate your card. Payment for the treatment is made on-site.</p>`,
+<p style="color:#888;">Your card will be securely saved. No amount will be charged. Payment for the treatment is made on-site.</p>`,
     },
   },
 
@@ -178,7 +206,10 @@ Price: {{price}}
       whatsapp: `🔄 Le spa vous propose un autre créneau
 
 Soin : {{service_name}}
+Durée : {{duration}} min
 Nouveau créneau proposé : {{confirmed_slot}}
+Personnes : {{guest_count}}
+Total : {{total_price}}
 {{#manager_message}}Message : {{manager_message}}{{/manager_message}}
 
 👉 Accepter ou décliner : {{confirm_link}}
@@ -186,7 +217,10 @@ Nouveau créneau proposé : {{confirmed_slot}}
       email_subject: `Proposition de nouveau créneau pour votre soin`,
       email_body: `<h2>Le spa vous propose un autre créneau</h2>
 <p><strong>Soin :</strong> {{service_name}}</p>
+<p><strong>Durée :</strong> {{duration}} min</p>
 <p><strong>Créneau proposé :</strong> {{confirmed_slot}}</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 {{#manager_message}}<p><strong>Message :</strong> {{manager_message}}</p>{{/manager_message}}
 <br>
 <a href="{{confirm_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Voir la proposition</a>
@@ -196,7 +230,10 @@ Nouveau créneau proposé : {{confirmed_slot}}
       whatsapp: `🔄 The spa suggests a different time slot
 
 Treatment: {{service_name}}
+Duration: {{duration}} min
 Proposed slot: {{confirmed_slot}}
+Guests: {{guest_count}}
+Total: {{total_price}}
 {{#manager_message}}Message: {{manager_message}}{{/manager_message}}
 
 👉 Accept or decline: {{confirm_link}}
@@ -204,7 +241,10 @@ Proposed slot: {{confirmed_slot}}
       email_subject: `New time slot proposed for your treatment`,
       email_body: `<h2>The spa suggests a different time slot</h2>
 <p><strong>Treatment:</strong> {{service_name}}</p>
+<p><strong>Duration:</strong> {{duration}} min</p>
 <p><strong>Proposed slot:</strong> {{confirmed_slot}}</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 {{#manager_message}}<p><strong>Message:</strong> {{manager_message}}</p>{{/manager_message}}
 <br>
 <a href="{{confirm_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">View proposal</a>
@@ -254,6 +294,8 @@ Unfortunately, the spa is not available for this time slot. Feel free to submit 
 Soin : {{service_name}}
 Date : {{confirmed_slot}}
 Durée : {{duration}} min
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
 À bientôt ! Si besoin, gérez votre réservation ici :
 👉 {{manage_link}}`,
@@ -262,12 +304,13 @@ Durée : {{duration}} min
 <p><strong>Soin :</strong> {{service_name}}</p>
 <p><strong>Date :</strong> {{confirmed_slot}}</p>
 <p><strong>Durée :</strong> {{duration}} min</p>
-<p><strong>Prix :</strong> {{price}} (paiement sur place)</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}} (paiement sur place)</p>
 <br>
-<p>Une microtransaction de {{microtransaction_display}} a été débitée pour valider votre carte.</p>
+<p>Votre carte a été enregistrée de manière sécurisée.</p>
 <br>
 <a href="{{manage_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Gérer mon soin</a>
-<p style="color:#888;margin-top:12px;">Vous pouvez modifier ou annuler votre soin depuis ce lien.</p>`,
+<p style="color:#888;margin-top:12px;">Vous pouvez annuler votre soin depuis ce lien.</p>`,
     },
     en: {
       whatsapp: `🎉 Your treatment is confirmed!
@@ -275,6 +318,8 @@ Durée : {{duration}} min
 Treatment: {{service_name}}
 Date: {{confirmed_slot}}
 Duration: {{duration}} min
+Guests: {{guest_count}}
+Total: {{total_price}}
 
 See you soon! If needed, manage your booking here:
 👉 {{manage_link}}`,
@@ -283,12 +328,13 @@ See you soon! If needed, manage your booking here:
 <p><strong>Treatment:</strong> {{service_name}}</p>
 <p><strong>Date:</strong> {{confirmed_slot}}</p>
 <p><strong>Duration:</strong> {{duration}} min</p>
-<p><strong>Price:</strong> {{price}} (payment on-site)</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}} (payment on-site)</p>
 <br>
-<p>A {{microtransaction_display}} micro-transaction has been charged to validate your card.</p>
+<p>Your card has been securely saved.</p>
 <br>
 <a href="{{manage_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Manage my booking</a>
-<p style="color:#888;margin-top:12px;">You can modify or cancel your treatment from this link.</p>`,
+<p style="color:#888;margin-top:12px;">You can cancel your treatment from this link.</p>`,
     },
   },
 
@@ -297,14 +343,20 @@ See you soon! If needed, manage your booking here:
       whatsapp: `✅ Créneau accepté !
 
 Soin : {{service_name}}
+Durée : {{duration}} min
 Date confirmée : {{confirmed_slot}}
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
 👉 Confirmer et valider ma carte : {{confirm_link}}
 ⏱ Vous avez jusqu'au {{deadline}} pour confirmer.`,
       email_subject: `Créneau accepté — Confirmez votre réservation`,
       email_body: `<h2>Créneau accepté !</h2>
 <p><strong>Soin :</strong> {{service_name}}</p>
+<p><strong>Durée :</strong> {{duration}} min</p>
 <p><strong>Date confirmée :</strong> {{confirmed_slot}}</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 <br>
 <a href="{{confirm_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Confirmer mon soin</a>
 <p style="color:#888;margin-top:12px;">⏱ Vous avez jusqu'au {{deadline}} pour confirmer.</p>`,
@@ -313,14 +365,20 @@ Date confirmée : {{confirmed_slot}}
       whatsapp: `✅ Slot accepted!
 
 Treatment: {{service_name}}
+Duration: {{duration}} min
 Confirmed date: {{confirmed_slot}}
+Guests: {{guest_count}}
+Total: {{total_price}}
 
 👉 Confirm and validate my card: {{confirm_link}}
 ⏱ You have until {{deadline}} to confirm.`,
       email_subject: `Slot accepted — Confirm your booking`,
       email_body: `<h2>Slot accepted!</h2>
 <p><strong>Treatment:</strong> {{service_name}}</p>
+<p><strong>Duration:</strong> {{duration}} min</p>
 <p><strong>Confirmed date:</strong> {{confirmed_slot}}</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 <br>
 <a href="{{confirm_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Confirm my treatment</a>
 <p style="color:#888;margin-top:12px;">⏱ You have until {{deadline}} to confirm.</p>`,
@@ -332,7 +390,10 @@ Confirmed date: {{confirmed_slot}}
       whatsapp: `😔 Votre demande de soin n'a pas reçu de réponse
 
 Soin : {{service_name}}
+Durée : {{duration}} min
 Date demandée : {{requested_slot}}
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
 Le spa n'a pas pu répondre dans les délais. N'hésitez pas à soumettre une nouvelle demande.
 
@@ -340,6 +401,9 @@ Le spa n'a pas pu répondre dans les délais. N'hésitez pas à soumettre une no
       email_subject: `Votre demande de soin — Pas de réponse`,
       email_body: `<h2>Pas de réponse dans les délais</h2>
 <p>Votre demande de soin <strong>{{service_name}}</strong> pour le <strong>{{requested_slot}}</strong> n'a pas reçu de réponse dans les délais impartis.</p>
+<p><strong>Durée :</strong> {{duration}} min</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 <p>N'hésitez pas à soumettre une nouvelle demande.</p>
 <br>
 <a href="{{request_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Nouvelle demande</a>`,
@@ -348,7 +412,10 @@ Le spa n'a pas pu répondre dans les délais. N'hésitez pas à soumettre une no
       whatsapp: `😔 Your treatment request did not receive a response
 
 Treatment: {{service_name}}
+Duration: {{duration}} min
 Requested date: {{requested_slot}}
+Guests: {{guest_count}}
+Total: {{total_price}}
 
 The spa was unable to respond in time. Feel free to submit a new request.
 
@@ -356,6 +423,9 @@ The spa was unable to respond in time. Feel free to submit a new request.
       email_subject: `Your treatment request — No response`,
       email_body: `<h2>No response in time</h2>
 <p>Your request for <strong>{{service_name}}</strong> on <strong>{{requested_slot}}</strong> did not receive a response in time.</p>
+<p><strong>Duration:</strong> {{duration}} min</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 <p>Feel free to submit a new request.</p>
 <br>
 <a href="{{request_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">New request</a>`,
@@ -367,7 +437,10 @@ The spa was unable to respond in time. Feel free to submit a new request.
       whatsapp: `⏰ Votre réservation a expiré
 
 Soin : {{service_name}}
+Durée : {{duration}} min
 Date : {{confirmed_slot}}
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
 Le délai de confirmation est dépassé. Votre réservation a été annulée.
 
@@ -375,6 +448,9 @@ Le délai de confirmation est dépassé. Votre réservation a été annulée.
       email_subject: `Réservation expirée — {{service_name}}`,
       email_body: `<h2>Réservation expirée</h2>
 <p>Le délai de confirmation pour votre soin <strong>{{service_name}}</strong> le <strong>{{confirmed_slot}}</strong> est dépassé.</p>
+<p><strong>Durée :</strong> {{duration}} min</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 <p>Votre réservation a été annulée. N'hésitez pas à soumettre une nouvelle demande.</p>
 <br>
 <a href="{{request_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Nouvelle demande</a>`,
@@ -383,7 +459,10 @@ Le délai de confirmation est dépassé. Votre réservation a été annulée.
       whatsapp: `⏰ Your booking has expired
 
 Treatment: {{service_name}}
+Duration: {{duration}} min
 Date: {{confirmed_slot}}
+Guests: {{guest_count}}
+Total: {{total_price}}
 
 The confirmation deadline has passed. Your booking has been cancelled.
 
@@ -391,6 +470,9 @@ The confirmation deadline has passed. Your booking has been cancelled.
       email_subject: `Booking expired — {{service_name}}`,
       email_body: `<h2>Booking expired</h2>
 <p>The confirmation deadline for your <strong>{{service_name}}</strong> treatment on <strong>{{confirmed_slot}}</strong> has passed.</p>
+<p><strong>Duration:</strong> {{duration}} min</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 <p>Your booking has been cancelled. Feel free to submit a new request.</p>
 <br>
 <a href="{{request_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">New request</a>`,
@@ -404,6 +486,8 @@ The confirmation deadline has passed. Your booking has been cancelled.
 Soin : {{service_name}}
 Date : {{confirmed_slot}}
 Durée : {{duration}} min
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
 À bientôt !
 👉 Gérer ma réservation : {{manage_link}}`,
@@ -412,6 +496,8 @@ Durée : {{duration}} min
 <p><strong>Soin :</strong> {{service_name}}</p>
 <p><strong>Date :</strong> {{confirmed_slot}}</p>
 <p><strong>Durée :</strong> {{duration}} min</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 <br>
 <a href="{{manage_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Gérer ma réservation</a>`,
     },
@@ -421,6 +507,8 @@ Durée : {{duration}} min
 Treatment: {{service_name}}
 Date: {{confirmed_slot}}
 Duration: {{duration}} min
+Guests: {{guest_count}}
+Total: {{total_price}}
 
 See you soon!
 👉 Manage my booking: {{manage_link}}`,
@@ -429,6 +517,8 @@ See you soon!
 <p><strong>Treatment:</strong> {{service_name}}</p>
 <p><strong>Date:</strong> {{confirmed_slot}}</p>
 <p><strong>Duration:</strong> {{duration}} min</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 <br>
 <a href="{{manage_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Manage my booking</a>`,
     },
@@ -440,12 +530,18 @@ See you soon!
 
 Soin : {{service_name}}
 Date : {{confirmed_slot}}
+Durée : {{duration}} min
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
 Nous vous attendons ! À très bientôt.`,
       email_subject: `Rappel : votre soin aujourd'hui`,
       email_body: `<h2>C'est aujourd'hui ! ⏰</h2>
 <p><strong>Soin :</strong> {{service_name}}</p>
 <p><strong>Date :</strong> {{confirmed_slot}}</p>
+<p><strong>Durée :</strong> {{duration}} min</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 <p>Nous vous attendons ! À très bientôt.</p>`,
     },
     en: {
@@ -453,12 +549,18 @@ Nous vous attendons ! À très bientôt.`,
 
 Treatment: {{service_name}}
 Date: {{confirmed_slot}}
+Duration: {{duration}} min
+Guests: {{guest_count}}
+Total: {{total_price}}
 
 We look forward to seeing you! See you soon.`,
       email_subject: `Reminder: your treatment today`,
       email_body: `<h2>It's today! ⏰</h2>
 <p><strong>Treatment:</strong> {{service_name}}</p>
 <p><strong>Date:</strong> {{confirmed_slot}}</p>
+<p><strong>Duration:</strong> {{duration}} min</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 <p>We look forward to seeing you! See you soon.</p>`,
     },
   },
@@ -469,16 +571,22 @@ We look forward to seeing you! See you soon.`,
 
 Soin : {{service_name}}
 Date : {{confirmed_slot}}
+Durée : {{duration}} min
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
-{{#refunded}}Votre microtransaction de {{microtransaction_display}} sera remboursée.{{/refunded}}
-{{#not_refunded}}Conformément à notre politique, la microtransaction ne sera pas remboursée pour une annulation à moins de 24h.{{/not_refunded}}
+{{#refunded}}Annulation gratuite confirmée.{{/refunded}}
+{{#not_refunded}}Conformément à notre politique, votre carte pourra être débitée pour une annulation à moins de 24h.{{/not_refunded}}
 
 👉 Nouvelle demande : {{request_link}}`,
       email_subject: `Annulation confirmée — {{service_name}}`,
       email_body: `<h2>Annulation confirmée</h2>
 <p>Votre soin <strong>{{service_name}}</strong> prévu le <strong>{{confirmed_slot}}</strong> a bien été annulé.</p>
-{{#refunded}}<p>Votre microtransaction de {{microtransaction_display}} sera remboursée.</p>{{/refunded}}
-{{#not_refunded}}<p>Conformément à notre politique, la microtransaction ne sera pas remboursée pour une annulation à moins de 24h.</p>{{/not_refunded}}
+<p><strong>Durée :</strong> {{duration}} min</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
+{{#refunded}}<p>Annulation gratuite confirmée.</p>{{/refunded}}
+{{#not_refunded}}<p>Conformément à notre politique, votre carte pourra être débitée pour une annulation à moins de 24h.</p>{{/not_refunded}}
 <br>
 <a href="{{request_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Nouvelle demande</a>`,
     },
@@ -487,16 +595,22 @@ Date : {{confirmed_slot}}
 
 Treatment: {{service_name}}
 Date: {{confirmed_slot}}
+Duration: {{duration}} min
+Guests: {{guest_count}}
+Total: {{total_price}}
 
-{{#refunded}}Your {{microtransaction_display}} micro-transaction will be refunded.{{/refunded}}
-{{#not_refunded}}Per our policy, the micro-transaction will not be refunded for cancellations within 24 hours.{{/not_refunded}}
+{{#refunded}}Free cancellation confirmed.{{/refunded}}
+{{#not_refunded}}Per our policy, your card may be charged for cancellations within 24 hours.{{/not_refunded}}
 
 👉 New request: {{request_link}}`,
       email_subject: `Cancellation confirmed — {{service_name}}`,
       email_body: `<h2>Cancellation confirmed</h2>
 <p>Your <strong>{{service_name}}</strong> treatment scheduled for <strong>{{confirmed_slot}}</strong> has been cancelled.</p>
-{{#refunded}}<p>Your {{microtransaction_display}} micro-transaction will be refunded.</p>{{/refunded}}
-{{#not_refunded}}<p>Per our policy, the micro-transaction will not be refunded for cancellations within 24 hours.</p>{{/not_refunded}}
+<p><strong>Duration:</strong> {{duration}} min</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
+{{#refunded}}<p>Free cancellation confirmed.</p>{{/refunded}}
+{{#not_refunded}}<p>Per our policy, your card may be charged for cancellations within 24 hours.</p>{{/not_refunded}}
 <br>
 <a href="{{request_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">New request</a>`,
     },
@@ -507,16 +621,22 @@ Date: {{confirmed_slot}}
       whatsapp: `🔄 Demande de modification — {{property_name}}
 
 Client : {{client_name}}
-Soin : {{service_name}} ({{duration}} min)
+Soin : {{service_name}}
+Durée : {{duration}} min
 Nouveau créneau souhaité : {{requested_slot}}
+Personnes : {{guest_count}}
+Total : {{total_price}}
 
 👉 Traiter la demande : {{manager_link}}
 ⏱ Vous avez {{response_delay}} min pour répondre.`,
       email_subject: `Demande de modification — {{client_name}}`,
       email_body: `<h2>Demande de modification</h2>
 <p><strong>Client :</strong> {{client_name}}</p>
-<p><strong>Soin :</strong> {{service_name}} ({{duration}} min)</p>
+<p><strong>Soin :</strong> {{service_name}}</p>
+<p><strong>Durée :</strong> {{duration}} min</p>
 <p><strong>Nouveau créneau souhaité :</strong> {{requested_slot}}</p>
+<p><strong>Personnes :</strong> {{guest_count}}</p>
+<p><strong>Total :</strong> {{total_price}}</p>
 <br>
 <a href="{{manager_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Traiter la demande</a>
 <p style="color:#888;margin-top:12px;">⏱ Vous avez {{response_delay}} min pour répondre.</p>`,
@@ -525,16 +645,22 @@ Nouveau créneau souhaité : {{requested_slot}}
       whatsapp: `🔄 Modification request — {{property_name}}
 
 Client: {{client_name}}
-Treatment: {{service_name}} ({{duration}} min)
+Treatment: {{service_name}}
+Duration: {{duration}} min
 New requested slot: {{requested_slot}}
+Guests: {{guest_count}}
+Total: {{total_price}}
 
 👉 Handle request: {{manager_link}}
 ⏱ You have {{response_delay}} min to respond.`,
       email_subject: `Modification request — {{client_name}}`,
       email_body: `<h2>Modification request</h2>
 <p><strong>Client:</strong> {{client_name}}</p>
-<p><strong>Treatment:</strong> {{service_name}} ({{duration}} min)</p>
+<p><strong>Treatment:</strong> {{service_name}}</p>
+<p><strong>Duration:</strong> {{duration}} min</p>
 <p><strong>New requested slot:</strong> {{requested_slot}}</p>
+<p><strong>Guests:</strong> {{guest_count}}</p>
+<p><strong>Total:</strong> {{total_price}}</p>
 <br>
 <a href="{{manager_link}}" style="background:#000;color:#fff;padding:12px 24px;text-decoration:none;border-radius:6px;">Handle request</a>
 <p style="color:#888;margin-top:12px;">⏱ You have {{response_delay}} min to respond.</p>`,

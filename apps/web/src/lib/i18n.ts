@@ -58,6 +58,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'confirm.processing': 'Traitement en cours...',
     'confirm.success.title': 'Soin confirmé !',
     'confirm.success.text': 'Votre soin est confirmé. Vous recevrez un rappel avant votre rendez-vous.',
+    'confirm.whatsappQuestion': 'Une question ? Contactez-nous sur WhatsApp',
+    'confirm.cancelRequest': 'Annuler ma demande',
+    'confirm.cancelDone.title': 'Demande annulée',
+    'confirm.cancelDone.text': 'Votre demande de soin a bien été annulée.',
     'confirm.expired.title': 'Lien expiré',
     'confirm.expired.text': 'Ce lien de confirmation a expiré ou a déjà été utilisé.',
 
@@ -256,6 +260,10 @@ const translations: Record<Locale, Record<string, string>> = {
     'confirm.processing': 'Processing...',
     'confirm.success.title': 'Treatment Confirmed!',
     'confirm.success.text': 'Your treatment is confirmed. You will receive a reminder before your appointment.',
+    'confirm.whatsappQuestion': 'Have a question? Contact us on WhatsApp',
+    'confirm.cancelRequest': 'Cancel my request',
+    'confirm.cancelDone.title': 'Request cancelled',
+    'confirm.cancelDone.text': 'Your treatment request has been cancelled.',
     'confirm.expired.title': 'Link Expired',
     'confirm.expired.text': 'This confirmation link has expired or has already been used.',
 

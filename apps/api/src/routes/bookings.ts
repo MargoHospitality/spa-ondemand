@@ -178,10 +178,13 @@ bookingsRouter.get('/confirm/:token', async (req, res, next) => {
       return;
     }
 
-    const [{ data: service }, { data: property }] = await Promise.all([
+    const [{ data: service }, { data: property }, { data: managers }] = await Promise.all([
       supabase.from('services').select('*').eq('id', result.booking.service_id).single(),
       supabase.from('properties').select('name, slug, logo_url').eq('id', result.booking.property_id).single(),
+      supabase.from('users').select('phone_whatsapp').eq('property_id', result.booking.property_id).in('role', ['manager', 'admin']).eq('active', true).limit(1),
     ]);
+
+    const managerWhatsapp = managers?.[0]?.phone_whatsapp || null;
 
     res.json({
       success: true,
@@ -197,8 +200,28 @@ bookingsRouter.get('/confirm/:token', async (req, res, next) => {
         },
         service,
         property,
+        manager_whatsapp: managerWhatsapp,
       },
     });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ─── POST /api/confirm/:token/cancel — Client cancels before confirming ───
+
+bookingsRouter.post('/confirm/:token/cancel', async (req, res, next) => {
+  try {
+    const result = await validateClientToken(req.params.token);
+    if (!result || result.purpose !== 'client_confirmation') {
+      res.status(401).json({ success: false, error: 'Invalid or expired token' });
+      return;
+    }
+
+    const { reason } = z.object({ reason: z.string().max(500).optional() }).parse(req.body);
+    const updated = await handleClientCancellation(result.booking, reason);
+
+    res.json({ success: true, data: updated });
   } catch (err) {
     next(err);
   }

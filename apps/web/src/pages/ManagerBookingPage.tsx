@@ -157,12 +157,10 @@ export default function ManagerBookingPage() {
             <span className="text-tertiary">{t('confirm.price')}</span>
             <span className="font-medium">{formatPrice(service.price)}</span>
           </div>
-          {guestCount > 1 && (
-            <div className="flex justify-between border-t border-gray-200 pt-2">
-              <span className="text-tertiary font-medium">{t('manager.total')}</span>
-              <span className="font-semibold text-primary">{formatPrice(totalPrice)}</span>
-            </div>
-          )}
+          <div className="flex justify-between border-t border-gray-200 pt-2">
+            <span className="text-tertiary font-medium">{t('manager.total')}</span>
+            <span className="font-semibold text-primary">{formatPrice(totalPrice)}</span>
+          </div>
           <div className="flex justify-between">
             <span className="text-tertiary">{t('manager.slot')}</span>
             <span className="font-medium">{formatDateTime(booking.requested_slot, 'fr')}</span>

@@ -345,6 +345,8 @@ function buildVariables(
     service_name: serviceName,
     duration: String(service.duration_minutes),
     price: formatPrice(service.price, locale),
+    guest_count: String(booking.guest_count || 1),
+    total_price: formatPrice(service.price * (booking.guest_count || 1), locale),
 
     // Slots
     requested_slot: formatSlot(booking.requested_slot, locale),

@@ -46,6 +46,8 @@ export const api = {
     request<any>(`/bookings/confirm/${token}`),
   confirmBooking: (token: string, body: any) =>
     request<any>(`/bookings/confirm/${token}`, { method: 'POST', body: JSON.stringify(body) }),
+  cancelFromConfirm: (token: string, reason?: string) =>
+    request<any>(`/bookings/confirm/${token}/cancel`, { method: 'POST', body: JSON.stringify({ reason }) }),
   getManageBooking: (token: string) =>
     request<any>(`/bookings/manage/${token}`),
   cancelBooking: (token: string, reason?: string) =>

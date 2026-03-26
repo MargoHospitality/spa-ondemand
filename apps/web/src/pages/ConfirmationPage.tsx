@@ -30,7 +30,14 @@ interface PropertyData {
   logo_url: string | null;
 }
 
-function ConfirmForm({ booking, service, property }: { booking: BookingData; service: Service; property: PropertyData | null }) {
+interface ConfirmPageData {
+  booking: BookingData;
+  service: Service;
+  property: PropertyData | null;
+  manager_whatsapp: string | null;
+}
+
+function ConfirmForm({ booking, service, property, managerWhatsapp }: { booking: BookingData; service: Service; property: PropertyData | null; managerWhatsapp: string | null }) {
   const t = useT();
   const { locale } = useLocale();
   const stripe = useStripe();
@@ -39,6 +46,8 @@ function ConfirmForm({ booking, service, property }: { booking: BookingData; ser
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
   const slot = booking.confirmed_slot || booking.requested_slot;
   const guestCount = booking.guest_count || 1;
@@ -80,6 +89,48 @@ function ConfirmForm({ booking, service, property }: { booking: BookingData; ser
     } finally {
       setSubmitting(false);
     }
+  }
+
+  async function handleCancel() {
+    if (!token) return;
+    setCancelling(true);
+    setError('');
+    try {
+      await api.cancelFromConfirm(token);
+      setCancelled(true);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError(t('common.error'));
+      }
+    } finally {
+      setCancelling(false);
+    }
+  }
+
+  const whatsappUrl = managerWhatsapp
+    ? `https://wa.me/${managerWhatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
+        locale === 'fr'
+          ? `Bonjour, j'ai une question concernant ma réservation du ${formatDateTime(slot, locale)}...`
+          : `Hello, I have a question about my booking on ${formatDateTime(slot, locale)}...`
+      )}`
+    : null;
+
+  if (cancelled) {
+    return (
+      <Card className="text-center">
+        <div className="py-8">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-display font-semibold mb-2">{t('confirm.cancelDone.title')}</h2>
+          <p className="text-tertiary">{t('confirm.cancelDone.text')}</p>
+        </div>
+      </Card>
+    );
   }
 
   if (success) {
@@ -125,12 +176,8 @@ function ConfirmForm({ booking, service, property }: { booking: BookingData; ser
           <span className="text-tertiary">{t('confirm.price')}</span>
           <span className="font-medium">{formatPrice(service.price)}</span>
 
-          {guestCount > 1 && (
-            <>
-              <span className="text-tertiary font-medium">{t('confirm.total')}</span>
-              <span className="font-semibold text-primary">{formatPrice(totalPrice)}</span>
-            </>
-          )}
+          <span className="text-tertiary font-medium">{t('confirm.total')}</span>
+          <span className="font-semibold text-primary">{formatPrice(totalPrice)}</span>
         </div>
       </div>
 
@@ -188,6 +235,31 @@ function ConfirmForm({ booking, service, property }: { booking: BookingData; ser
           {submitting ? t('confirm.processing') : t('confirm.cta')}
         </Button>
       </form>
+
+      {/* WhatsApp contact link */}
+      {whatsappUrl && (
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block text-center text-sm text-primary hover:underline mt-4"
+        >
+          {t('confirm.whatsappQuestion')}
+        </a>
+      )}
+
+      {/* Cancel request button */}
+      <div className="mt-4 pt-4 border-t border-gray-200">
+        <Button
+          variant="ghost"
+          className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+          onClick={handleCancel}
+          loading={cancelling}
+          size="sm"
+        >
+          {t('confirm.cancelRequest')}
+        </Button>
+      </div>
     </Card>
   );
 }
@@ -195,7 +267,7 @@ function ConfirmForm({ booking, service, property }: { booking: BookingData; ser
 export default function ConfirmationPage() {
   const { token } = useParams<{ token: string }>();
   const t = useT();
-  const [data, setData] = useState<{ booking: BookingData; service: Service; property: PropertyData | null } | null>(null);
+  const [data, setData] = useState<ConfirmPageData | null>(null);
   const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -249,7 +321,7 @@ export default function ConfirmationPage() {
   return (
     <PublicLayout logoUrl={logoUrl} propertyName={propertyName}>
       <Elements stripe={stripePromise}>
-        <ConfirmForm booking={data.booking} service={data.service} property={data.property} />
+        <ConfirmForm booking={data.booking} service={data.service} property={data.property} managerWhatsapp={data.manager_whatsapp} />
       </Elements>
     </PublicLayout>
   );
