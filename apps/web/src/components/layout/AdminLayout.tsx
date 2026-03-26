@@ -1,11 +1,12 @@
 import { type ReactNode, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, CalendarCheck, Sparkles, Users, Settings, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, CalendarCheck, Sparkles, Users, Settings, LogOut, Menu, X, DollarSign } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 
 const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Tableau de bord', end: true },
   { to: '/admin/bookings', icon: CalendarCheck, label: 'Demandes' },
+  { to: '/admin/finances', icon: DollarSign, label: 'Finances' },
   { to: '/admin/services', icon: Sparkles, label: 'Prestations' },
   { to: '/admin/users', icon: Users, label: 'Utilisateurs' },
   { to: '/admin/settings', icon: Settings, label: 'Paramètres' },

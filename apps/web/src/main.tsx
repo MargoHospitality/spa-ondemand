@@ -17,6 +17,7 @@ import BookingDetailPage from './pages/admin/BookingDetailPage';
 import ServicesPage from './pages/admin/ServicesPage';
 import UsersPage from './pages/admin/UsersPage';
 import SettingsPage from './pages/admin/SettingsPage';
+import FinancesPage from './pages/admin/FinancesPage';
 
 import './index.css';
 
@@ -51,6 +52,7 @@ function App() {
                     <Route index element={<DashboardPage />} />
                     <Route path="bookings" element={<BookingsPage />} />
                     <Route path="bookings/:id" element={<BookingDetailPage />} />
+                    <Route path="finances" element={<FinancesPage />} />
                     <Route path="services" element={<ServicesPage />} />
                     <Route path="users" element={<UsersPage />} />
                     <Route path="settings" element={<SettingsPage />} />

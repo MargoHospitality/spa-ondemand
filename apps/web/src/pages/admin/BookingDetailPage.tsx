@@ -6,7 +6,7 @@ import { StatusBadge } from '../../components/ui/StatusBadge';
 import { Alert } from '../../components/ui/Alert';
 import { api, ApiError } from '../../lib/api';
 import { formatDateTime, formatPrice, formatDuration } from '../../lib/format';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, CheckCircle, XCircle, Calendar, Send, Ban, RotateCcw } from 'lucide-react';
 import type { BookingStatus, Booking, Service } from '@margo/shared';
 
 export default function BookingDetailPage() {
@@ -17,6 +17,13 @@ export default function BookingDetailPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  // Reschedule modal state
+  const [showReschedule, setShowReschedule] = useState(false);
+  const [rescheduleDate, setRescheduleDate] = useState('');
+  const [rescheduleTime, setRescheduleTime] = useState('');
+  // Decline modal state
+  const [showDecline, setShowDecline] = useState(false);
+  const [declineReason, setDeclineReason] = useState('');
 
   useEffect(() => {
     if (!id) return;
@@ -26,15 +33,17 @@ export default function BookingDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  async function updateStatus(status: string) {
+  async function doAction(action: () => Promise<any>, successMsg: string) {
     if (!id) return;
     setActionLoading(true);
     setError('');
     setSuccess('');
     try {
-      const updated = await api.admin.updateBookingStatus(id, status);
+      const updated = await action();
       setBooking((prev) => prev ? { ...prev, ...updated } : prev);
-      setSuccess(`Statut mis à jour: ${status}`);
+      setSuccess(successMsg);
+      setShowReschedule(false);
+      setShowDecline(false);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Erreur');
     } finally {
@@ -46,17 +55,7 @@ export default function BookingDetailPage() {
   if (!booking) return <Alert type="error">{error || 'Réservation introuvable'}</Alert>;
 
   const service = booking.services;
-  const slot = booking.confirmed_slot || booking.requested_slot;
-
-  // Available actions based on current status
-  const availableActions: { label: string; status: string; variant: 'primary' | 'secondary' | 'danger' }[] = [];
-  if (booking.status === 'CLIENT_CONFIRMED') {
-    availableActions.push(
-      { label: 'Marquer terminé', status: 'COMPLETED', variant: 'primary' },
-      { label: 'Marquer no-show', status: 'NO_SHOW', variant: 'secondary' },
-      { label: 'Annuler', status: 'CANCELLED_MANAGER', variant: 'danger' },
-    );
-  }
+  const total = (service.price || 0) * (booking.guest_count || 1);
 
   // Timeline entries
   const timeline: { label: string; date: string | null }[] = [
@@ -98,8 +97,9 @@ export default function BookingDetailPage() {
             {service.duration_minutes && (
               <Row label="Durée" value={formatDuration(service.duration_minutes)} />
             )}
-            <Row label="Prix" value={formatPrice(service.price)} />
-            <Row label="Microtransaction" value={formatPrice(booking.microtransaction_amount)} />
+            <Row label="Nombre de personnes" value={String(booking.guest_count || 1)} />
+            <Row label="Prix unitaire" value={formatPrice(service.price)} />
+            <Row label="Total" value={formatPrice(total)} />
             {booking.stripe_charge_status && (
               <Row label="Paiement Stripe" value={booking.stripe_charge_status} />
             )}
@@ -147,24 +147,105 @@ export default function BookingDetailPage() {
         </Card>
 
         {/* Actions */}
-        {availableActions.length > 0 && (
-          <Card>
-            <h3 className="text-sm font-medium text-tertiary uppercase tracking-wide mb-4">Actions</h3>
-            <div className="space-y-3">
-              {availableActions.map(({ label, status, variant }) => (
-                <Button
-                  key={status}
-                  variant={variant}
-                  className="w-full"
-                  loading={actionLoading}
-                  onClick={() => updateStatus(status)}
-                >
-                  {label}
+        <Card>
+          <h3 className="text-sm font-medium text-tertiary uppercase tracking-wide mb-4">Actions</h3>
+          <div className="space-y-3">
+            {/* REQUESTED: Confirm, Reschedule, Decline */}
+            {(booking.status === 'REQUESTED' || booking.status === 'MODIFICATION_REQUESTED') && (
+              <>
+                <Button variant="primary" className="w-full" loading={actionLoading} onClick={() => doAction(() => api.admin.confirmBooking(id!), 'Réservation confirmée')}>
+                  <CheckCircle className="h-4 w-4 mr-2" /> Confirmer
                 </Button>
-              ))}
+                <Button variant="secondary" className="w-full" onClick={() => setShowReschedule(true)}>
+                  <Calendar className="h-4 w-4 mr-2" /> Proposer un autre créneau
+                </Button>
+                <Button variant="danger" className="w-full" onClick={() => setShowDecline(true)}>
+                  <XCircle className="h-4 w-4 mr-2" /> Refuser
+                </Button>
+              </>
+            )}
+
+            {/* CLIENT_CONFIRMED: Complete, No-show, Cancel */}
+            {booking.status === 'CLIENT_CONFIRMED' && (
+              <>
+                <Button variant="primary" className="w-full" loading={actionLoading} onClick={() => doAction(() => api.admin.completeBooking(id!), 'Soin marqué comme terminé')}>
+                  <CheckCircle className="h-4 w-4 mr-2" /> Marquer terminé
+                </Button>
+                <Button variant="secondary" className="w-full" loading={actionLoading} onClick={() => doAction(() => api.admin.noshowBooking(id!), 'Marqué no-show')}>
+                  <XCircle className="h-4 w-4 mr-2" /> Marquer no-show
+                </Button>
+                <Button variant="danger" className="w-full" loading={actionLoading} onClick={() => doAction(() => api.admin.cancelBooking(id!), 'Réservation annulée')}>
+                  <Ban className="h-4 w-4 mr-2" /> Annuler
+                </Button>
+              </>
+            )}
+
+            {/* EXPIRED_CLIENT: Resend */}
+            {booking.status === 'EXPIRED_CLIENT' && (
+              <Button variant="primary" className="w-full" loading={actionLoading} onClick={() => doAction(() => api.admin.resendBooking(id!), 'Relance envoyée au client')}>
+                <RotateCcw className="h-4 w-4 mr-2" /> Relancer le client
+              </Button>
+            )}
+
+            {/* MANAGER_CONFIRMED / MANAGER_RESCHEDULED: Cancel */}
+            {(booking.status === 'MANAGER_CONFIRMED' || booking.status === 'MANAGER_RESCHEDULED') && (
+              <Button variant="danger" className="w-full" loading={actionLoading} onClick={() => doAction(() => api.admin.cancelBooking(id!), 'Réservation annulée')}>
+                <Ban className="h-4 w-4 mr-2" /> Annuler
+              </Button>
+            )}
+
+            {/* No actions for terminal statuses */}
+            {['COMPLETED', 'NO_SHOW', 'CANCELLED_CLIENT', 'CANCELLED_MANAGER', 'MANAGER_DECLINED', 'CLIENT_DECLINED_RESCHEDULE', 'EXPIRED_MANAGER'].includes(booking.status) && (
+              <p className="text-tertiary text-sm text-center py-2">Aucune action disponible</p>
+            )}
+          </div>
+
+          {/* Reschedule modal */}
+          {showReschedule && (
+            <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+              <h4 className="text-sm font-medium">Proposer un nouveau créneau</h4>
+              <div className="flex gap-2">
+                <input type="date" value={rescheduleDate} onChange={(e) => setRescheduleDate(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+                <input type="time" value={rescheduleTime} onChange={(e) => setRescheduleTime(e.target.value)} className="w-28 px-3 py-2 border border-gray-300 rounded-lg text-sm" />
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  loading={actionLoading}
+                  disabled={!rescheduleDate || !rescheduleTime}
+                  onClick={() => {
+                    const slot = `${rescheduleDate}T${rescheduleTime}:00.000Z`;
+                    doAction(() => api.admin.rescheduleBooking(id!, slot), 'Contre-proposition envoyée');
+                  }}
+                >
+                  Envoyer
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setShowReschedule(false)}>Annuler</Button>
+              </div>
             </div>
-          </Card>
-        )}
+          )}
+
+          {/* Decline modal */}
+          {showDecline && (
+            <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+              <h4 className="text-sm font-medium">Motif de refus</h4>
+              <textarea
+                value={declineReason}
+                onChange={(e) => setDeclineReason(e.target.value)}
+                placeholder="Motif (optionnel)"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                rows={2}
+              />
+              <div className="flex gap-2">
+                <Button variant="danger" size="sm" loading={actionLoading} onClick={() => doAction(() => api.admin.declineBooking(id!, declineReason), 'Demande refusée')}>
+                  Confirmer le refus
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setShowDecline(false)}>Annuler</Button>
+              </div>
+            </div>
+          )}
+        </Card>
       </div>
     </div>
   );

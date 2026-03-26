@@ -97,6 +97,34 @@ export const api = {
       request<any>('/admin/closures', { method: 'POST', body: JSON.stringify(body), headers: authHeaders() }),
     deleteClosure: (id: string) =>
       request<any>(`/admin/closures/${id}`, { method: 'DELETE', headers: authHeaders() }),
+    // Booking actions
+    confirmBooking: (id: string) =>
+      request<any>(`/admin/bookings/${id}/confirm`, { method: 'POST', body: '{}', headers: authHeaders() }),
+    declineBooking: (id: string, reason?: string) =>
+      request<any>(`/admin/bookings/${id}/decline`, { method: 'POST', body: JSON.stringify({ reason }), headers: authHeaders() }),
+    rescheduleBooking: (id: string, proposedSlot: string) =>
+      request<any>(`/admin/bookings/${id}/reschedule`, { method: 'POST', body: JSON.stringify({ proposed_slot: proposedSlot }), headers: authHeaders() }),
+    cancelBooking: (id: string) =>
+      request<any>(`/admin/bookings/${id}/cancel`, { method: 'POST', body: '{}', headers: authHeaders() }),
+    completeBooking: (id: string) =>
+      request<any>(`/admin/bookings/${id}/complete`, { method: 'POST', body: '{}', headers: authHeaders() }),
+    noshowBooking: (id: string) =>
+      request<any>(`/admin/bookings/${id}/noshow`, { method: 'POST', body: '{}', headers: authHeaders() }),
+    resendBooking: (id: string) =>
+      request<any>(`/admin/bookings/${id}/resend`, { method: 'POST', body: '{}', headers: authHeaders() }),
+    // Booking counts for pills
+    getBookingCounts: (propertyId: string) =>
+      request<any>(`/admin/bookings/counts?property_id=${propertyId}`, { headers: authHeaders() }),
+    // Finances
+    getFinances: (params: Record<string, string>) => {
+      const qs = new URLSearchParams(params).toString();
+      return request<any>(`/admin/finances?${qs}`, { headers: authHeaders() });
+    },
+    getFinancesExportUrl: (params: Record<string, string>) => {
+      const qs = new URLSearchParams(params).toString();
+      const token = localStorage.getItem('sb-access-token');
+      return `${API_BASE}/admin/finances/export?${qs}&token=${token}`;
+    },
   },
 };
 
