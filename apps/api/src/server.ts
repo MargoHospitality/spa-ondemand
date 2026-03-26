@@ -21,7 +21,25 @@ app.use('/webhooks/stripe', express.raw({ type: 'application/json' }), (req, _re
 
 // ─── Middleware ───
 
-app.use(cors({ origin: config.appUrl }));
+// Allow multiple origins for CORS
+const allowedOrigins = [
+  config.appUrl,
+  'https://spa.riad-elisa.com',
+  'https://spaondemandgy87.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173',
+];
+
+app.use(cors({ 
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(null, false);
+  }
+}));
 app.use(express.json());
 
 // ─── Health check ───
