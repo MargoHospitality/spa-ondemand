@@ -73,15 +73,28 @@ export interface Property {
   created_at: string;
 }
 
+export interface ServiceCategory {
+  id: string;
+  property_id: string;
+  name_fr: string;
+  name_en: string;
+  display_order: number;
+  active: boolean;
+  created_at: string;
+}
+
 export interface Service {
   id: string;
   property_id: string;
+  category_id: string | null;
   name_fr: string;
   name_en: string;
   description_fr: string | null;
   description_en: string | null;
   duration_minutes: number;
   price: number;
+  default_guests: number;
+  max_guests: number;
   active: boolean;
   display_order: number;
   created_at: string;
@@ -120,11 +133,14 @@ export interface Booking {
   manager_token_expires_at: string | null;
   client_token: string | null;
   client_token_expires_at: string | null;
+  // Guests
+  guest_count: number;
   // Stripe
   stripe_payment_method_id: string | null;
   stripe_customer_id: string | null;
   stripe_charge_id: string | null;
   stripe_charge_status: string | null;
+  stripe_setup_intent_id: string | null;
   microtransaction_amount: number;
   // Timestamps
   requested_at: string | null;
@@ -182,6 +198,7 @@ export interface CreateBookingRequest {
   client_source?: ClientSource;
   requested_slot: string;
   client_message?: string;
+  guest_count?: number;
 }
 
 export interface ManagerActionRequest {
@@ -206,6 +223,11 @@ export interface PaymentCustomerResult {
 
 export interface PaymentChargeResult {
   chargeId: string;
+  paymentMethodId: string;
+}
+
+export interface SetupIntentResult {
+  setupIntentId: string;
   paymentMethodId: string;
 }
 

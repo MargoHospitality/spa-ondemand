@@ -22,6 +22,8 @@ export const api = {
   // ─── Public ───
   getProperty: (slug: string) =>
     request<any>(`/properties/${slug}`),
+  getServiceCategories: (propertyId: string) =>
+    request<any[]>(`/service-categories?property_id=${propertyId}`),
   getServices: (propertyId: string) =>
     request<any[]>(`/services?property_id=${propertyId}`),
   getClosures: (propertyId: string) =>

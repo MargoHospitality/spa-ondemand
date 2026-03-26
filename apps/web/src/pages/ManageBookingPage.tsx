@@ -3,17 +3,22 @@ import { useParams } from 'react-router-dom';
 import { PublicLayout } from '../components/layout/PublicLayout';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import { Select } from '../components/ui/Select';
 import { Alert } from '../components/ui/Alert';
 import { api, ApiError } from '../lib/api';
 import { useT, useLocale } from '../lib/i18n';
 import { formatDateTime, formatPrice, formatDuration, getServiceName } from '../lib/format';
 import type { Booking, Service } from '@margo/shared';
 
+interface PropertyData {
+  name: string;
+  slug: string;
+  logo_url: string | null;
+}
+
 interface ManageData {
   booking: Booking;
   service: Service;
+  property: PropertyData | null;
   can_modify: boolean;
   can_cancel: boolean;
   free_cancellation: boolean;
@@ -27,14 +32,10 @@ export default function ManageBookingPage() {
   const [data, setData] = useState<ManageData | null>(null);
   const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<'main' | 'modify' | 'cancel'>('main');
+  const [view, setView] = useState<'main' | 'cancel'>('main');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState<string | null>(null);
-
-  // Modify form
-  const [modifyDate, setModifyDate] = useState('');
-  const [modifyTime, setModifyTime] = useState('');
 
   // Cancel form
   const [cancelReason, setCancelReason] = useState('');
@@ -77,20 +78,8 @@ export default function ManageBookingPage() {
     }
   }
 
-  async function handleModify() {
-    if (!token || !modifyDate || !modifyTime) return;
-    setSubmitting(true);
-    setError('');
-    try {
-      const slot = new Date(`${modifyDate}T${modifyTime}:00`).toISOString();
-      await api.modifyBooking(token, slot);
-      setDone(t('manage.modifySuccess'));
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : t('common.error'));
-    } finally {
-      setSubmitting(false);
-    }
-  }
+  const logoUrl = data?.property?.logo_url || undefined;
+  const propertyName = data?.property?.name || undefined;
 
   if (loading) {
     return (
@@ -118,7 +107,7 @@ export default function ManageBookingPage() {
 
   if (done) {
     return (
-      <PublicLayout>
+      <PublicLayout logoUrl={logoUrl} propertyName={propertyName}>
         <Card className="text-center py-8">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -131,14 +120,15 @@ export default function ManageBookingPage() {
     );
   }
 
-  const { booking, service, can_modify, free_cancellation } = data;
+  const { booking, service, free_cancellation } = data;
   const slot = booking.confirmed_slot || booking.requested_slot;
-  const amount = formatPrice(booking.microtransaction_amount);
+  const guestCount = booking.guest_count || 1;
+  const totalPrice = service.price * guestCount;
 
   // If status is MANAGER_RESCHEDULED, show reschedule response UI
   if (booking.status === 'MANAGER_RESCHEDULED' && booking.confirmed_slot) {
     return (
-      <PublicLayout>
+      <PublicLayout logoUrl={logoUrl} propertyName={propertyName}>
         <Card>
           <h2 className="text-2xl font-display font-semibold text-center mb-6">{t('manage.reschedule.title')}</h2>
           <div className="bg-secondary rounded-lg p-4 mb-6 space-y-2 text-sm">
@@ -166,7 +156,7 @@ export default function ManageBookingPage() {
   }
 
   return (
-    <PublicLayout>
+    <PublicLayout logoUrl={logoUrl} propertyName={propertyName}>
       <Card>
         <h2 className="text-2xl font-display font-semibold text-center mb-6">{t('manage.title')}</h2>
 
@@ -188,8 +178,16 @@ export default function ManageBookingPage() {
             </div>
           )}
           <div className="flex justify-between">
+            <span className="text-tertiary">{t('manage.guests')}</span>
+            <span className="font-medium">{guestCount}</span>
+          </div>
+          <div className="flex justify-between">
             <span className="text-tertiary">{t('confirm.price')}</span>
             <span className="font-medium">{formatPrice(service.price)}</span>
+          </div>
+          <div className="flex justify-between border-t border-gray-200 pt-2 mt-2">
+            <span className="text-tertiary font-medium">{t('manage.total')}</span>
+            <span className="font-semibold text-primary">{formatPrice(totalPrice)}</span>
           </div>
         </div>
 
@@ -197,18 +195,8 @@ export default function ManageBookingPage() {
 
         {view === 'main' && (
           <div className="space-y-3">
-            {/* Modify button */}
-            <Button
-              variant="secondary"
-              className="w-full"
-              disabled={!can_modify}
-              onClick={() => setView('modify')}
-            >
-              {t('manage.modify')}
-            </Button>
-            {!can_modify && (
-              <p className="text-xs text-tertiary text-center">{t('manage.modifyDisabled')}</p>
-            )}
+            {/* Modify hint — no modify button in V1 */}
+            <p className="text-xs text-tertiary text-center">{t('manage.modifyHint')}</p>
 
             {/* Cancel button */}
             <Button
@@ -221,43 +209,8 @@ export default function ManageBookingPage() {
             <p className="text-xs text-tertiary text-center">
               {free_cancellation
                 ? t('manage.cancelFree')
-                : t('manage.cancelPolicy', { amount })}
+                : t('manage.cancelPolicy')}
             </p>
-          </div>
-        )}
-
-        {view === 'modify' && (
-          <div className="space-y-4">
-            <h3 className="font-medium text-sm">{t('manage.modifyTitle')}</h3>
-            <Input
-              label={t('form.date')}
-              type="date"
-              value={modifyDate}
-              onChange={(e) => setModifyDate(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
-              required
-            />
-            <Select
-              label={t('form.time')}
-              value={modifyTime}
-              onChange={(e) => setModifyTime(e.target.value)}
-              required
-              placeholder="—"
-              options={Array.from({ length: 23 }, (_, i) => {
-                const h = Math.floor(i / 2) + 9;
-                const m = i % 2 === 0 ? '00' : '30';
-                if (h > 20) return null;
-                return { value: `${h.toString().padStart(2, '0')}:${m}`, label: `${h.toString().padStart(2, '0')}:${m}` };
-              }).filter(Boolean) as { value: string; label: string }[]}
-            />
-            <div className="flex gap-3">
-              <Button onClick={handleModify} loading={submitting} className="flex-1">
-                {t('manage.modifySubmit')}
-              </Button>
-              <Button variant="ghost" onClick={() => setView('main')} className="flex-1">
-                {t('common.back')}
-              </Button>
-            </div>
           </div>
         )}
 
@@ -266,7 +219,7 @@ export default function ManageBookingPage() {
             <Alert type={free_cancellation ? 'info' : 'warning'}>
               {t('manage.cancelConfirm')}
               {!free_cancellation && (
-                <p className="mt-1 font-medium">{t('manage.cancelPolicy', { amount })}</p>
+                <p className="mt-1 font-medium">{t('manage.cancelPolicy')}</p>
               )}
             </Alert>
             <div>

@@ -20,10 +20,17 @@ interface BookingData {
   confirmed_slot: string | null;
   requested_slot: string;
   microtransaction_amount: number;
+  guest_count: number;
   status: string;
 }
 
-function ConfirmForm({ booking, service }: { booking: BookingData; service: Service }) {
+interface PropertyData {
+  name: string;
+  slug: string;
+  logo_url: string | null;
+}
+
+function ConfirmForm({ booking, service, property }: { booking: BookingData; service: Service; property: PropertyData | null }) {
   const t = useT();
   const { locale } = useLocale();
   const stripe = useStripe();
@@ -34,7 +41,8 @@ function ConfirmForm({ booking, service }: { booking: BookingData; service: Serv
   const [success, setSuccess] = useState(false);
 
   const slot = booking.confirmed_slot || booking.requested_slot;
-  const amount = formatPrice(booking.microtransaction_amount);
+  const guestCount = booking.guest_count || 1;
+  const totalPrice = service.price * guestCount;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -111,9 +119,25 @@ function ConfirmForm({ booking, service }: { booking: BookingData; service: Serv
             </>
           )}
 
+          <span className="text-tertiary">{t('confirm.guests')}</span>
+          <span className="font-medium">{guestCount}</span>
+
           <span className="text-tertiary">{t('confirm.price')}</span>
           <span className="font-medium">{formatPrice(service.price)}</span>
+
+          {guestCount > 1 && (
+            <>
+              <span className="text-tertiary font-medium">{t('confirm.total')}</span>
+              <span className="font-semibold text-primary">{formatPrice(totalPrice)}</span>
+            </>
+          )}
         </div>
+      </div>
+
+      {/* Total highlight */}
+      <div className="bg-primary/5 border border-primary/20 rounded-lg p-3 mb-6 text-center">
+        <p className="text-sm text-tertiary">{t('confirm.total')}</p>
+        <p className="text-2xl font-semibold text-primary">{formatPrice(totalPrice)}</p>
       </div>
 
       {error && <Alert type="error" className="mb-4">{error}</Alert>}
@@ -121,22 +145,44 @@ function ConfirmForm({ booking, service }: { booking: BookingData; service: Serv
       <form onSubmit={handleSubmit} className="space-y-5">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">{t('confirm.cardInfo')}</label>
-          <CardElement
-            options={{
-              style: {
-                base: {
-                  fontSize: '16px',
-                  color: '#333',
-                  '::placeholder': { color: '#9ca3af' },
+          <div className="border border-gray-300 rounded-lg p-3">
+            <CardElement
+              options={{
+                style: {
+                  base: {
+                    fontSize: '16px',
+                    color: '#333',
+                    '::placeholder': { color: '#9ca3af' },
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
 
         <Alert type="info">
-          {t('confirm.legal', { amount })}
+          {t('confirm.legal')}
         </Alert>
+
+        {/* Cancellation policy */}
+        <div className="bg-gray-50 rounded-lg p-3 text-sm">
+          <p className="font-medium text-gray-700 mb-1">{t('confirm.cancelPolicy.title')}</p>
+          <ul className="text-tertiary space-y-0.5 text-xs">
+            <li>• {t('confirm.cancelPolicy.free')}</li>
+            <li>• {t('confirm.cancelPolicy.charged')}</li>
+          </ul>
+        </div>
+
+        {/* Stripe trust badges */}
+        <div className="flex items-center justify-center gap-3 text-xs text-tertiary">
+          <svg className="h-5 w-auto" viewBox="0 0 60 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="60" height="25" rx="4" fill="#635BFF" />
+            <text x="10" y="17" fill="white" fontSize="12" fontWeight="bold" fontFamily="sans-serif">stripe</text>
+          </svg>
+          <span>PCI DSS</span>
+          <span>•</span>
+          <span>SSL</span>
+        </div>
 
         <Button type="submit" loading={submitting} disabled={!stripe} className="w-full" size="lg">
           {submitting ? t('confirm.processing') : t('confirm.cta')}
@@ -149,7 +195,7 @@ function ConfirmForm({ booking, service }: { booking: BookingData; service: Serv
 export default function ConfirmationPage() {
   const { token } = useParams<{ token: string }>();
   const t = useT();
-  const [data, setData] = useState<{ booking: BookingData; service: Service } | null>(null);
+  const [data, setData] = useState<{ booking: BookingData; service: Service; property: PropertyData | null } | null>(null);
   const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -197,10 +243,13 @@ export default function ConfirmationPage() {
     );
   }
 
+  const logoUrl = data.property?.logo_url || undefined;
+  const propertyName = data.property?.name || undefined;
+
   return (
-    <PublicLayout>
+    <PublicLayout logoUrl={logoUrl} propertyName={propertyName}>
       <Elements stripe={stripePromise}>
-        <ConfirmForm booking={data.booking} service={data.service} />
+        <ConfirmForm booking={data.booking} service={data.service} property={data.property} />
       </Elements>
     </PublicLayout>
   );

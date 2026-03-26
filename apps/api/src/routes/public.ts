@@ -25,6 +25,30 @@ publicRouter.get('/properties/:slug', async (req, res, next) => {
   }
 });
 
+// ─── GET /api/service-categories — Get categories for a property ───
+
+publicRouter.get('/service-categories', async (req, res, next) => {
+  try {
+    const { property_id } = req.query;
+    if (!property_id) {
+      res.status(400).json({ success: false, error: 'property_id required' });
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('service_categories')
+      .select('*')
+      .eq('property_id', property_id as string)
+      .eq('active', true)
+      .order('display_order', { ascending: true });
+
+    if (error) throw error;
+    res.json({ success: true, data: data || [] });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // ─── GET /api/services — Get services for a property ───
 
 publicRouter.get('/services', async (req, res, next) => {

@@ -44,8 +44,8 @@ export default function DashboardPage() {
         api.admin.getDashboardStats(PROPERTY_ID).catch(() => null),
         api.admin.getBookings({
           property_id: PROPERTY_ID,
-          from: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
-          to: new Date().toISOString().split('T')[0] + 'T23:59:59Z',
+          created_from: new Date().toISOString().split('T')[0] + 'T00:00:00Z',
+          created_to: new Date().toISOString().split('T')[0] + 'T23:59:59Z',
           limit: '50',
           offset: '0',
         }).catch(() => []),

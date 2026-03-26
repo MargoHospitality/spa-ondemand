@@ -10,20 +10,10 @@ import { Alert } from '../components/ui/Alert';
 import { api, ApiError } from '../lib/api';
 import { useT, useLocale, type Locale } from '../lib/i18n';
 import { getServiceName, formatPrice, formatDuration } from '../lib/format';
-import type { Property, Service, Closure } from '@margo/shared';
+import type { Property, Service, Closure, ServiceCategory } from '@margo/shared';
 import { CLIENT_SOURCES } from '@margo/shared';
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || '';
-
-// Categories for grouping services
-const CATEGORY_LABELS: Record<string, Record<Locale, string>> = {
-  hammam: { fr: 'Hammam', en: 'Hammam' },
-  pack_hammam_massage: { fr: 'Pack Hammam / Massage', en: 'Hammam / Massage Package' },
-  massage: { fr: 'Massage', en: 'Massage' },
-  soins_visage: { fr: 'Soins du visage', en: 'Facial Care' },
-  mise_en_beaute: { fr: 'Mise en beauté', en: 'Beauty Treatment' },
-  epilation: { fr: 'Épilation', en: 'Hair Removal' },
-};
 
 function BookingForm() {
   const { slug } = useParams<{ slug: string }>();
@@ -32,7 +22,8 @@ function BookingForm() {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
   const [property, setProperty] = useState<Property | null>(null);
-  const [services, setServices] = useState<(Service & { category?: string })[]>([]);
+  const [categories, setCategories] = useState<ServiceCategory[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
   const [closures, setClosures] = useState<Closure[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -47,26 +38,25 @@ function BookingForm() {
   const [phone, setPhone] = useState('');
   const [origin, setOrigin] = useState('');
   const [source, setSource] = useState('');
+  const [categoryId, setCategoryId] = useState('');
   const [serviceId, setServiceId] = useState('');
+  const [guestCount, setGuestCount] = useState(1);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (!slug) return;
-    Promise.all([
-      api.getProperty(slug),
-      api.getServices('').catch(() => []), // will be called with propertyId after
-      api.getClosures('').catch(() => []),
-    ]).catch(() => {});
 
     api.getProperty(slug).then((p: any) => {
       setProperty(p);
       return Promise.all([
+        api.getServiceCategories(p.id),
         api.getServices(p.id),
         api.getClosures(p.id),
       ]);
-    }).then(([svcs, cls]: [any[], any[]]) => {
+    }).then(([cats, svcs, cls]: [any[], any[], any[]]) => {
+      setCategories(cats);
       setServices(svcs);
       setClosures(cls);
     }).catch(() => {
@@ -119,20 +109,39 @@ function BookingForm() {
     });
   }
 
-  // Group services by category
-  function groupedServices(): { category: string; label: string; items: typeof services }[] {
-    const groups: Record<string, typeof services> = {};
-    for (const s of services) {
-      const cat = (s as any).category || 'other';
-      if (!groups[cat]) groups[cat] = [];
-      groups[cat].push(s);
+  // Filter services by selected category
+  const filteredServices = categoryId
+    ? services.filter((s) => s.category_id === categoryId)
+    : services;
+
+  // Selected service
+  const selectedService = services.find((s) => s.id === serviceId);
+
+  // When category changes, reset service if it doesn't belong to new category
+  function handleCategoryChange(newCatId: string) {
+    setCategoryId(newCatId);
+    if (serviceId) {
+      const svc = services.find((s) => s.id === serviceId);
+      if (svc && svc.category_id !== newCatId) {
+        setServiceId('');
+        setGuestCount(1);
+      }
     }
-    return Object.entries(groups).map(([key, items]) => ({
-      category: key,
-      label: CATEGORY_LABELS[key]?.[locale] || key,
-      items,
-    }));
   }
+
+  // When service changes, auto-fill guest count with default_guests
+  function handleServiceChange(newServiceId: string) {
+    setServiceId(newServiceId);
+    const svc = services.find((s) => s.id === newServiceId);
+    if (svc) {
+      setGuestCount(svc.default_guests);
+    } else {
+      setGuestCount(1);
+    }
+  }
+
+  // Dynamic total
+  const totalPrice = selectedService ? selectedService.price * guestCount : 0;
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -167,6 +176,7 @@ function BookingForm() {
         client_source: source || undefined,
         requested_slot: requestedSlot,
         client_message: message || undefined,
+        guest_count: guestCount,
         recaptcha_token: captchaToken,
       });
 
@@ -218,7 +228,14 @@ function BookingForm() {
 
   const timeSlots = generateTimeSlots();
   const today = new Date().toISOString().split('T')[0];
-  const selectedService = services.find((s) => s.id === serviceId);
+  const hasCategories = categories.length > 0;
+
+  // Group services by category for the select (when no category filter)
+  function getCategoryLabel(catId: string | null): string {
+    if (!catId) return locale === 'en' ? 'Other' : 'Autre';
+    const cat = categories.find((c) => c.id === catId);
+    return cat ? (locale === 'en' ? cat.name_en : cat.name_fr) : '';
+  }
 
   return (
     <PublicLayout logoUrl={property.logo_url || undefined} propertyName={property.name}>
@@ -309,28 +326,65 @@ function BookingForm() {
             }))}
           />
 
-          {/* Service selector grouped by category */}
+          {/* Category selector (if categories exist) */}
+          {hasCategories && (
+            <Select
+              label={t('form.category')}
+              value={categoryId}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              placeholder={t('form.categoryPlaceholder')}
+              options={categories.map((c) => ({
+                value: c.id,
+                label: locale === 'en' ? c.name_en : c.name_fr,
+              }))}
+            />
+          )}
+
+          {/* Service selector */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               {t('form.service')} <span className="text-red-500">*</span>
             </label>
             <select
               value={serviceId}
-              onChange={(e) => setServiceId(e.target.value)}
+              onChange={(e) => handleServiceChange(e.target.value)}
               required
               className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white"
             >
               <option value="">{t('form.servicePlaceholder')}</option>
-              {groupedServices().map((group) => (
-                <optgroup key={group.category} label={group.label}>
-                  {group.items.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {getServiceName(s, locale)} — {formatPrice(s.price)}
-                      {s.duration_minutes ? ` · ${formatDuration(s.duration_minutes)}` : ''}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
+              {hasCategories && categoryId ? (
+                // Flat list when category is selected
+                filteredServices.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {getServiceName(s, locale)} — {formatPrice(s.price)}
+                    {s.duration_minutes ? ` · ${formatDuration(s.duration_minutes)}` : ''}
+                  </option>
+                ))
+              ) : hasCategories ? (
+                // Grouped by category
+                categories.map((cat) => {
+                  const catServices = services.filter((s) => s.category_id === cat.id);
+                  if (catServices.length === 0) return null;
+                  return (
+                    <optgroup key={cat.id} label={locale === 'en' ? cat.name_en : cat.name_fr}>
+                      {catServices.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {getServiceName(s, locale)} — {formatPrice(s.price)}
+                          {s.duration_minutes ? ` · ${formatDuration(s.duration_minutes)}` : ''}
+                        </option>
+                      ))}
+                    </optgroup>
+                  );
+                })
+              ) : (
+                // No categories: flat list
+                services.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {getServiceName(s, locale)} — {formatPrice(s.price)}
+                    {s.duration_minutes ? ` · ${formatDuration(s.duration_minutes)}` : ''}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 
@@ -338,6 +392,28 @@ function BookingForm() {
           {selectedService && selectedService.description_fr && (
             <div className="bg-secondary rounded-lg p-3 text-sm text-tertiary">
               {locale === 'en' ? selectedService.description_en : selectedService.description_fr}
+            </div>
+          )}
+
+          {/* Guest count */}
+          {selectedService && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                {t('form.guests')} <span className="text-red-500">*</span>
+              </label>
+              <select
+                value={guestCount}
+                onChange={(e) => setGuestCount(Number(e.target.value))}
+                disabled={selectedService.default_guests === selectedService.max_guests}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white disabled:bg-gray-100 disabled:text-gray-500"
+              >
+                {Array.from(
+                  { length: selectedService.max_guests },
+                  (_, i) => i + 1
+                ).map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
             </div>
           )}
 
@@ -380,6 +456,19 @@ function BookingForm() {
               className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
             />
           </div>
+
+          {/* Dynamic total */}
+          {selectedService && (
+            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 text-center">
+              <p className="text-sm text-tertiary mb-1">{t('form.totalEstimate')}</p>
+              <p className="text-2xl font-semibold text-primary">{formatPrice(totalPrice)}</p>
+              {guestCount > 1 && (
+                <p className="text-xs text-tertiary mt-1">
+                  {formatPrice(selectedService.price)} × {guestCount} {t('form.guests').toLowerCase()}
+                </p>
+              )}
+            </div>
+          )}
 
           <Button type="submit" loading={submitting} className="w-full" size="lg">
             {submitting ? t('form.submitting') : t('form.submit')}

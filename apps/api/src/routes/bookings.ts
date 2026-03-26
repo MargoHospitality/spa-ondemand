@@ -32,6 +32,7 @@ const createBookingSchema = z.object({
   client_source: z.enum(CLIENT_SOURCES).optional(),
   requested_slot: z.string().datetime(),
   client_message: z.string().max(1000).optional(),
+  guest_count: z.number().int().min(1).max(10).optional(),
 });
 
 const managerActionSchema = z.object({
@@ -79,7 +80,7 @@ bookingsRouter.get('/:id', async (req, res, next) => {
 
 bookingsRouter.get('/', async (req, res, next) => {
   try {
-    const { property_id, status, from, to, limit = '50', offset = '0' } = req.query;
+    const { property_id, status, from, to, created_from, created_to, limit = '50', offset = '0' } = req.query;
 
     let query = supabase
       .from('bookings')
@@ -91,6 +92,8 @@ bookingsRouter.get('/', async (req, res, next) => {
     if (status) query = query.eq('status', status as string);
     if (from) query = query.gte('requested_slot', from as string);
     if (to) query = query.lte('requested_slot', to as string);
+    if (created_from) query = query.gte('created_at', created_from as string);
+    if (created_to) query = query.lte('created_at', created_to as string);
 
     const { data, error, count } = await query;
 
@@ -131,14 +134,12 @@ bookingsRouter.get('/manager/:token', async (req, res, next) => {
       return;
     }
 
-    // Fetch service details
-    const { data: service } = await supabase
-      .from('services')
-      .select('*')
-      .eq('id', booking.service_id)
-      .single();
+    const [{ data: service }, { data: property }] = await Promise.all([
+      supabase.from('services').select('*').eq('id', booking.service_id).single(),
+      supabase.from('properties').select('name, slug, logo_url').eq('id', booking.property_id).single(),
+    ]);
 
-    res.json({ success: true, data: { booking, service } });
+    res.json({ success: true, data: { booking, service, property } });
   } catch (err) {
     next(err);
   }
@@ -177,11 +178,10 @@ bookingsRouter.get('/confirm/:token', async (req, res, next) => {
       return;
     }
 
-    const { data: service } = await supabase
-      .from('services')
-      .select('*')
-      .eq('id', result.booking.service_id)
-      .single();
+    const [{ data: service }, { data: property }] = await Promise.all([
+      supabase.from('services').select('*').eq('id', result.booking.service_id).single(),
+      supabase.from('properties').select('name, slug, logo_url').eq('id', result.booking.property_id).single(),
+    ]);
 
     res.json({
       success: true,
@@ -192,9 +192,11 @@ bookingsRouter.get('/confirm/:token', async (req, res, next) => {
           confirmed_slot: result.booking.confirmed_slot,
           requested_slot: result.booking.requested_slot,
           microtransaction_amount: result.booking.microtransaction_amount,
+          guest_count: result.booking.guest_count,
           status: result.booking.status,
         },
         service,
+        property,
       },
     });
   } catch (err) {
@@ -235,11 +237,10 @@ bookingsRouter.get('/manage/:token', async (req, res, next) => {
       return;
     }
 
-    const { data: service } = await supabase
-      .from('services')
-      .select('*')
-      .eq('id', result.booking.service_id)
-      .single();
+    const [{ data: service }, { data: property }] = await Promise.all([
+      supabase.from('services').select('*').eq('id', result.booking.service_id).single(),
+      supabase.from('properties').select('name, slug, logo_url').eq('id', result.booking.property_id).single(),
+    ]);
 
     const slotTime = new Date(result.booking.confirmed_slot || result.booking.requested_slot);
     const hoursUntilSlot = (slotTime.getTime() - Date.now()) / (1000 * 60 * 60);
@@ -249,6 +250,7 @@ bookingsRouter.get('/manage/:token', async (req, res, next) => {
       data: {
         booking: result.booking,
         service,
+        property,
         can_modify: hoursUntilSlot > 24,
         can_cancel: true,
         free_cancellation: hoursUntilSlot > 24,

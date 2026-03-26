@@ -5,6 +5,7 @@ import type {
   PaymentCustomerResult,
   PaymentChargeResult,
   PaymentCaptureResult,
+  SetupIntentResult,
 } from '@margo/shared';
 
 const stripe = new Stripe(config.stripeSecretKey);
@@ -21,6 +22,30 @@ export class StripeProvider implements PaymentProvider {
       phone: params.phone,
     });
     return { customerId: customer.id };
+  }
+
+  async createSetupIntent(
+    customerId: string,
+    paymentMethodId: string,
+  ): Promise<SetupIntentResult> {
+    // Attach payment method to customer
+    await stripe.paymentMethods.attach(paymentMethodId, { customer: customerId });
+
+    // Create and confirm a SetupIntent (tokenisation only, 0 MAD)
+    const setupIntent = await stripe.setupIntents.create({
+      customer: customerId,
+      payment_method: paymentMethodId,
+      confirm: true,
+      automatic_payment_methods: {
+        enabled: true,
+        allow_redirects: 'never',
+      },
+    });
+
+    return {
+      setupIntentId: setupIntent.id,
+      paymentMethodId,
+    };
   }
 
   async chargeMicrotransaction(

@@ -10,12 +10,19 @@ import { useT } from '../lib/i18n';
 import { formatDateTime, formatPrice, formatDuration } from '../lib/format';
 import type { Booking, Service } from '@margo/shared';
 
+interface PropertyData {
+  name: string;
+  slug: string;
+  logo_url: string | null;
+}
+
 export default function ManagerBookingPage() {
   const { token } = useParams<{ token: string }>();
   const t = useT();
 
   const [booking, setBooking] = useState<Booking | null>(null);
   const [service, setService] = useState<Service | null>(null);
+  const [property, setProperty] = useState<PropertyData | null>(null);
   const [expired, setExpired] = useState(false);
   const [loading, setLoading] = useState(true);
   const [action, setAction] = useState<'accept' | 'reschedule' | 'decline' | null>(null);
@@ -34,6 +41,7 @@ export default function ManagerBookingPage() {
       .then((data: any) => {
         setBooking(data.booking);
         setService(data.service);
+        setProperty(data.property || null);
       })
       .catch((err) => {
         if (err instanceof ApiError && err.status === 401) setExpired(true);
@@ -68,6 +76,9 @@ export default function ManagerBookingPage() {
     }
   }
 
+  const logoUrl = property?.logo_url || undefined;
+  const propertyName = property?.name || undefined;
+
   if (loading) {
     return (
       <PublicLayout>
@@ -94,7 +105,7 @@ export default function ManagerBookingPage() {
 
   if (done) {
     return (
-      <PublicLayout>
+      <PublicLayout logoUrl={logoUrl} propertyName={propertyName}>
         <Card className="text-center py-8">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -107,6 +118,9 @@ export default function ManagerBookingPage() {
     );
   }
 
+  const guestCount = booking.guest_count || 1;
+  const totalPrice = service.price * guestCount;
+
   const sourceLabels: Record<string, string> = {
     social_media: 'Réseaux sociaux',
     recommendation: 'Recommandation',
@@ -115,7 +129,7 @@ export default function ManagerBookingPage() {
   };
 
   return (
-    <PublicLayout>
+    <PublicLayout logoUrl={logoUrl} propertyName={propertyName}>
       <Card>
         <h2 className="text-2xl font-display font-semibold text-center mb-6">{t('manager.title')}</h2>
 
@@ -136,9 +150,19 @@ export default function ManagerBookingPage() {
             </div>
           )}
           <div className="flex justify-between">
+            <span className="text-tertiary">{t('manager.guests')}</span>
+            <span className="font-medium">{guestCount}</span>
+          </div>
+          <div className="flex justify-between">
             <span className="text-tertiary">{t('confirm.price')}</span>
             <span className="font-medium">{formatPrice(service.price)}</span>
           </div>
+          {guestCount > 1 && (
+            <div className="flex justify-between border-t border-gray-200 pt-2">
+              <span className="text-tertiary font-medium">{t('manager.total')}</span>
+              <span className="font-semibold text-primary">{formatPrice(totalPrice)}</span>
+            </div>
+          )}
           <div className="flex justify-between">
             <span className="text-tertiary">{t('manager.slot')}</span>
             <span className="font-medium">{formatDateTime(booking.requested_slot, 'fr')}</span>

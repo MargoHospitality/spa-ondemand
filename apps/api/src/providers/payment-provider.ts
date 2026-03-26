@@ -2,6 +2,7 @@ import type {
   PaymentCustomerResult,
   PaymentChargeResult,
   PaymentCaptureResult,
+  SetupIntentResult,
 } from '@margo/shared';
 
 /**
@@ -17,7 +18,13 @@ export interface PaymentProvider {
     phone?: string;
   }): Promise<PaymentCustomerResult>;
 
-  /** Charge a microtransaction to validate the payment method */
+  /** Create a SetupIntent to tokenize a card without charging (0 MAD) */
+  createSetupIntent(
+    customerId: string,
+    paymentMethodId: string,
+  ): Promise<SetupIntentResult>;
+
+  /** Charge a microtransaction to validate the payment method (legacy) */
   chargeMicrotransaction(
     customerId: string,
     paymentMethodId: string,

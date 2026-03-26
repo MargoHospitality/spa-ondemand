@@ -93,6 +93,7 @@ export async function createBooking(input: CreateBookingRequest) {
       client_source: input.client_source || null,
       requested_slot: input.requested_slot,
       client_message: input.client_message || null,
+      guest_count: input.guest_count || 1,
       status: 'REQUESTED' as BookingStatus,
       microtransaction_amount: property.microtransaction_amount || DEFAULT_MICROTRANSACTION_AMOUNT,
       requested_at: now.toISOString(),
@@ -216,18 +217,16 @@ export async function handleClientConfirmation(
 
   const now = new Date();
 
-  // Create Stripe customer and charge microtransaction
+  // Create Stripe customer and SetupIntent (tokenisation only, 0 MAD)
   const { customerId } = await stripeProvider.createCustomer({
     email: booking.client_email,
     name: booking.client_name,
     phone: booking.client_phone,
   });
 
-  const { chargeId } = await stripeProvider.chargeMicrotransaction(
+  const { setupIntentId } = await stripeProvider.createSetupIntent(
     customerId,
     paymentMethodId,
-    booking.microtransaction_amount,
-    CURRENCY,
   );
 
   // Generate manage token (valid until slot + 2h)
@@ -241,8 +240,8 @@ export async function handleClientConfirmation(
       status: 'CLIENT_CONFIRMED' as BookingStatus,
       stripe_customer_id: customerId,
       stripe_payment_method_id: paymentMethodId,
-      stripe_charge_id: chargeId,
-      stripe_charge_status: 'succeeded',
+      stripe_setup_intent_id: setupIntentId,
+      stripe_charge_status: 'setup_succeeded',
       client_confirmed_at: now.toISOString(),
       // Replace confirmation token with manage token
       client_token: manageToken,
@@ -349,10 +348,10 @@ export async function handleClientCancellation(booking: Booking, reason?: string
     updated_at: now.toISOString(),
   };
 
-  // Auto-refund if > 24h before slot
-  if (hoursUntilSlot > 24 && booking.stripe_charge_id) {
-    await stripeProvider.refundCharge(booking.stripe_charge_id);
-    updates.stripe_charge_status = 'refunded';
+  // With SetupIntent flow, no charge was made — release payment method if > 24h
+  if (hoursUntilSlot > 24 && booking.stripe_payment_method_id) {
+    await stripeProvider.releasePaymentMethod(booking.stripe_payment_method_id);
+    updates.stripe_charge_status = 'released';
   }
 
   const { data, error } = await supabase
@@ -369,8 +368,8 @@ export async function handleClientCancellation(booking: Booking, reason?: string
     eventType: 'cancellation_confirmed',
     bookingId: booking.id,
     extraVars: {
-      refunded: hoursUntilSlot > 24,
-      not_refunded: hoursUntilSlot <= 24,
+      free_cancellation: hoursUntilSlot > 24,
+      late_cancellation: hoursUntilSlot <= 24,
     },
   }).catch((err) => console.error('[booking] Failed to notify:', err));
 
